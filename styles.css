@@ -391,7 +391,6 @@ body {
 }
 
 .chat-info .typing-status {
-	color: #25d366;
 	opacity: 1;
 	font-size: 13px;
 	margin: 2px 0 0 0;
@@ -493,7 +492,7 @@ body {
 	margin: 0;
 	line-height: 1.4;
 	word-wrap: break-word;
-	font-size: 14.2px;
+	font-size: 16px;
 	color: #303030;
 	white-space: pre-wrap;
 	overflow-wrap: break-word;
