@@ -1,0 +1,652 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	background-color: #f0f0f0;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.container {
+	display: flex;
+	height: 100vh;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	padding: 20px;
+	gap: 20px;
+}
+
+/* Marco del Teléfono */
+.phone-frame {
+	width: 576px;
+	height: 1280px;
+	background: #1a1a1a;
+	border-radius: 35px;
+	padding: 12px;
+	box-shadow: 
+		0 0 0 8px #2a2a2a,
+		0 0 30px rgba(0, 0, 0, 0.5),
+		inset 0 0 0 2px #333;
+	position: relative;
+	flex-shrink: 0;
+	transform: scale(0.6);
+	transform-origin: left center;
+	margin-left: -60px;
+}
+
+.phone-frame::before {
+	content: '';
+	position: absolute;
+	top: 25px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 120px;
+	height: 6px;
+	background: #333;
+	border-radius: 3px;
+}
+
+.phone-frame::after {
+	content: '';
+	position: absolute;
+	bottom: 12px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 150px;
+	height: 6px;
+	background: #333;
+	border-radius: 3px;
+}
+
+/* Botones físicos del teléfono */
+.phone-frame .power-button {
+	position: absolute;
+	right: -4px;
+	top: 200px;
+	width: 8px;
+	height: 80px;
+	background: #2a2a2a;
+	border-radius: 4px 0 0 4px;
+}
+
+.phone-frame .volume-up {
+	position: absolute;
+	left: -4px;
+	top: 180px;
+	width: 8px;
+	height: 60px;
+	background: #2a2a2a;
+	border-radius: 0 4px 4px 0;
+}
+
+.phone-frame .volume-down {
+	position: absolute;
+	left: -4px;
+	top: 260px;
+	width: 8px;
+	height: 60px;
+	background: #2a2a2a;
+	border-radius: 0 4px 4px 0;
+}
+
+.phone-screen {
+	width: 100%;
+	height: 100%;
+	background: black;
+	border-radius: 25px;
+	overflow: hidden;
+	position: relative;
+}
+
+/* Panel de Control */
+.control-panel {
+	flex: 1;
+	background: white;
+	border-radius: 15px;
+	padding: 20px;
+	overflow-y: auto;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	max-height: calc(100vh - 40px);
+}
+
+.control-panel h2 {
+	color: #075e54;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.control-panel h3 {
+	color: #333;
+	margin: 20px 0 10px 0;
+	border-bottom: 2px solid #25d366;
+	padding-bottom: 5px;
+}
+
+/* Participantes */
+.participants-section .participant {
+	margin-bottom: 15px;
+	padding: 15px;
+	background: #f8f8f8;
+	border-radius: 8px;
+	border-left: 4px solid #25d366;
+}
+
+.participants-section label {
+	display: block;
+	font-weight: 500;
+	margin-bottom: 5px;
+	color: #075e54;
+}
+
+.participants-section input {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.participants-section input:focus {
+	outline: none;
+	border-color: #25d366;
+	box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+}
+
+/* Mensajes */
+.messages-section {
+	margin-top: 20px;
+}
+
+.message-config {
+	background: #f8f8f8;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 15px;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+.message-config .message-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.message-config .message-number {
+	font-weight: bold;
+	color: #075e54;
+}
+
+.message-config .delete-message {
+	background: #ff4444;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.message-config .delete-message:hover {
+	background: #cc0000;
+}
+
+.message-config select,
+.message-config input,
+.message-config textarea {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.message-config textarea {
+	min-height: 80px;
+	resize: vertical;
+	font-family: inherit;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+	line-height: 1.4;
+}
+
+.message-config label {
+	display: block;
+	font-weight: 500;
+	margin-bottom: 5px;
+	color: #333;
+}
+
+/* Botones */
+.btn {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	margin: 5px;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#add-message {
+	background: #25d366;
+	color: white;
+	width: 100%;
+}
+
+#add-message:hover {
+	background: #20b358;
+}
+
+.btn-primary {
+	background: #075e54;
+	color: white;
+}
+
+.btn-primary:hover {
+	background: #064e45;
+}
+
+.btn-secondary {
+	background: #666;
+	color: white;
+}
+
+.btn-secondary:hover {
+	background: #555;
+}
+
+.btn-danger {
+	background: #ff4444;
+	color: white;
+}
+
+.btn-danger:hover {
+	background: #cc0000;
+}
+
+.simulation-controls {
+	margin-top: 20px;
+	text-align: center;
+}
+
+/* Chat Container */
+.chat-container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background: #e5ddd5;
+	position: relative;
+}
+
+/* Barra de Estado del Teléfono */
+.phone-status-bar {
+	background: #075e54;
+	color: white;
+	padding: 8px 20px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	height: 44px;
+}
+
+.status-left {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.status-right {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Chat Header */
+.chat-header {
+	background: #075e54;
+	color: white;
+	padding: 12px 16px;
+	display: flex;
+	align-items: center;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-avatar img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 12px;
+	object-fit: cover;
+}
+
+.chat-info {
+	flex: 1;
+}
+
+.chat-info h3 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.2;
+}
+
+.chat-info p {
+	margin: 2px 0 0 0;
+	font-size: 13px;
+	opacity: 0.8;
+	line-height: 1.1;
+}
+
+.chat-info .typing-status {
+	color: #25d366;
+	opacity: 1;
+	font-size: 13px;
+	margin: 2px 0 0 0;
+	animation: typingGlow 2s ease-in-out infinite;
+}
+
+.chat-info .typing-status.hidden {
+	display: none;
+}
+
+@keyframes typingGlow {
+	0%, 100% { opacity: 0.8; }
+	50% { opacity: 1; }
+}
+
+/* Chat Messages */
+.chat-messages {
+	flex: 1;
+	padding: 8px;
+	overflow-y: auto;
+	background-image: url('assets/img/background.png');
+	background-size: contain;
+	background-repeat: repeat;
+	background-color: #e5ddd5;
+}
+
+/* Separador de fecha */
+.date-separator {
+	text-align: center;
+	margin: 16px 0 12px 0;
+}
+
+.date-separator span {
+	background: rgba(0, 0, 0, 0.6);
+	color: white;
+	padding: 6px 12px;
+	border-radius: 7.5px;
+	font-size: 12.5px;
+	font-weight: 400;
+}
+
+/* Mensaje de cifrado */
+.encryption-message {
+	text-align: center;
+	margin: 12px 16px 20px 16px;
+}
+
+.encryption-content {
+	background: #fff3cd;
+	padding: 12px 16px;
+	border-radius: 7.5px;
+	font-size: 13px;
+	color: #856404;
+	line-height: 1.4;
+	box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
+
+.more-info {
+	color: #0084ff;
+	cursor: pointer;
+}
+
+/* Mensajes */
+.message {
+	display: flex;
+	margin-bottom: 8px;
+	align-items: flex-end;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: messageAppear 0.3s ease forwards;
+	clear: both;
+}
+
+@keyframes messageAppear {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.message.sent {
+	justify-content: flex-end;
+}
+
+.message.received {
+	justify-content: flex-start;
+}
+
+.message-bubble {
+	max-width: 65%;
+	padding: 8px 12px;
+	border-radius: 7.5px;
+	position: relative;
+	box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+	margin: 2px 0;
+}
+
+.message.sent .message-bubble {
+	background: #dcf8c6;
+	border-bottom-right-radius: 2px;
+	margin-left: auto;
+}
+
+.message.received .message-bubble {
+	background: white;
+	border-bottom-left-radius: 2px;
+}
+
+.message-text {
+	margin: 0;
+	line-height: 1.4;
+	word-wrap: break-word;
+	font-size: 14.2px;
+	color: #303030;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+.message-time {
+	font-size: 11px;
+	color: rgba(0, 0, 0, 0.45);
+	margin-top: 2px;
+	text-align: right;
+	float: right;
+	margin-left: 10px;
+}
+
+.message.received .message-time {
+	color: rgba(0, 0, 0, 0.45);
+}
+
+/* Indicador de escribiendo */
+.typing-indicator {
+	display: flex;
+	align-items: center;
+	padding: 10px 20px;
+	background: rgba(255, 255, 255, 0.9);
+	margin: 0 20px 20px 20px;
+	border-radius: 18px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	transition: all 0.3s ease;
+}
+
+.typing-indicator.hidden {
+	display: none;
+}
+
+.typing-avatar img {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	margin-right: 10px;
+	object-fit: cover;
+}
+
+.typing-animation {
+	display: flex;
+	flex-direction: column;
+}
+
+.typing-name {
+	font-size: 12px;
+	color: #075e54;
+	font-weight: 500;
+}
+
+.typing-dots {
+	display: flex;
+	align-items: center;
+	margin-top: 2px;
+}
+
+.typing-dots span {
+	height: 8px;
+	width: 8px;
+	background: #999;
+	border-radius: 50%;
+	margin-right: 3px;
+	animation: typingDots 1.5s infinite;
+}
+
+.typing-dots span:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+	animation-delay: 0.4s;
+}
+
+@keyframes typingDots {
+
+	0%,
+	60%,
+	100% {
+		transform: translateY(0);
+		opacity: 0.4;
+	}
+
+	30% {
+		transform: translateY(-10px);
+		opacity: 1;
+	}
+}
+
+/* Chat Input */
+.chat-input {
+	display: flex;
+	padding: 15px 20px;
+	background: #f0f0f0;
+	border-top: 1px solid #e0e0e0;
+}
+
+.chat-input input {
+	flex: 1;
+	padding: 12px 16px;
+	border: 1px solid #ddd;
+	border-radius: 25px;
+	outline: none;
+	font-size: 14px;
+	background: white;
+}
+
+.chat-input button {
+	margin-left: 10px;
+	padding: 12px 16px;
+	background: #25d366;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background 0.3s ease;
+}
+
+.chat-input button:hover:not(:disabled) {
+	background: #20b358;
+}
+
+.chat-input button:disabled {
+	background: #ccc;
+	cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .phone-frame {
+        transform: scale(0.5);
+        margin-left: -120px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .phone-frame {
+        transform: scale(0.4);
+        align-self: center;
+        margin-left: 0;
+    }
+    
+    .control-panel {
+        order: 2;
+        max-height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .phone-frame {
+        transform: scale(0.3);
+    }
+    
+    .control-panel {
+        max-height: 300px;
+    }
+}/* Scrollbar personalizado */
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #25d366;
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #20b358;
+}
