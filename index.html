@@ -16,7 +16,6 @@
 		<!-- Panel de Control -->
 		<div class="control-panel">
 			<h2>Panel de Control</h2>
-
 			<!-- Configuración de Participantes -->
 			<div class="participants-section">
 				<h3>Participantes</h3>
@@ -28,7 +27,7 @@
 					</div>
 					<div class="participant">
 						<label>Remoto (Izquierda) - Mensajes blancos:</label>
-						<input type="text" id="participant2-name" value="Remoto (Izquierda)" placeholder="Nombre">
+						<input type="text" id="participant2-name" value="Lucas Bonomo" placeholder="Nombre">
 						<input type="url" id="participant2-avatar" placeholder="URL del avatar">
 					</div>
 				</div>
@@ -53,8 +52,6 @@
 
 		<!-- Marco del Teléfono -->
 		<div class="phone-frame">
-			<!-- Botones físicos -->
-
 			<div class="phone-screen">
 				<!-- Chat -->
 				<div class="chat-container">
@@ -64,23 +61,39 @@
 							<span>22:59</span>
 						</div>
 						<div class="status-right">
-							<span>�</span>
-							<span>📶</span>
-							<span>�</span>
-							<span>4G</span>
-							<span>�</span>
+							<span class="wifi icon"></span>
+							<span class="cellular">
+								<span class="network icon"></span>
+								<span class="cellular icon"></span>
+							</span>
+							<span class="battery icon"></span>
 							<span>53%</span>
 						</div>
 					</div>
 
 					<div class="chat-header">
-						<div class="chat-avatar">
-							<img id="chat-contact-avatar" src="assets/img/avatar-default.svg" alt="Avatar">
+						<div class="header-left">
+							<img class="back-button" width="32" height="32" src="assets/img/phone/arrow_back.svg" alt="Volver" />
+							<div class="chat-avatar">
+								<img id="chat-contact-avatar" src="assets/img/avatar-default.svg" alt="Avatar">
+							</div>
+							<div class="chat-info">
+								<h3 id="chat-contact-name">Chat</h3>
+								<p id="chat-status">en línea</p>
+								<p id="chat-typing-status" class="typing-status hidden">escribiendo...</p>
+							</div>
 						</div>
-						<div class="chat-info">
-							<h3 id="chat-contact-name">Chat</h3>
-							<p id="chat-status">en línea</p>
-							<p id="chat-typing-status" class="typing-status hidden">escribiendo...</p>
+						<div class="header-actions">
+							<span>
+								<img width="32" height="32" src="assets/img/phone/videocam.svg" />
+							</span>
+							<span>
+								<img height="32" src="assets/img/phone/phone.svg" />
+							</span>
+							<span>
+								<img height="32" src="assets/img/phone/more_vert.svg" />
+							</span>
+
 						</div>
 					</div>
 
@@ -104,8 +117,17 @@
 					</div>
 
 					<div class="chat-input">
-						<input type="text" placeholder="Escribe un mensaje..." disabled>
-						<button disabled>📤</button>
+						<div class="input">
+							<div class="input-left">
+								<img width="28" height="28" src="assets/img/phone/emoji.svg" />
+								<span class="placeholder">Escribe un mensaje...</span>
+							</div>
+							<div class="input-right">
+								<img width="28" height="28" src="assets/img/phone/attach.svg" />
+								<img width="28" height="28" src="assets/img/phone/photo.svg" />
+							</div>
+						</div>
+						<img width="54" height="54" src="assets/img/phone/mic.svg" />
 					</div>
 				</div>
 			</div>

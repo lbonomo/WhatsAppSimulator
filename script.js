@@ -2,7 +2,7 @@ class WAFakeSimulator {
     constructor() {
         this.participants = {
             1: { name: 'Local (Derecha)', avatar: 'assets/img/avatar-local.svg' },
-            2: { name: 'Remoto (Izquierda)', avatar: 'assets/img/avatar-lucas.svg' }
+            2: { name: 'Lucas Bonomo', avatar: 'assets/img/avatar-lucas.svg' }
         };
         this.messages = [];
         this.currentSimulation = null;
@@ -169,15 +169,6 @@ class WAFakeSimulator {
         dateDiv.innerHTML = '<span>Hoy</span>';
         chatMessages.appendChild(dateDiv);
         
-        // Agregar mensaje de cifrado
-        const encryptionDiv = document.createElement('div');
-        encryptionDiv.className = 'encryption-message';
-        encryptionDiv.innerHTML = `
-            <div class="encryption-content">
-                🔒 Los mensajes y las llamadas están cifrados de extremo a extremo. Solo las personas en este chat pueden leerlos, escucharlos o compartirlos. <span class="more-info">Obtén más información.</span>
-            </div>
-        `;
-        chatMessages.appendChild(encryptionDiv);
         
         this.hideTypingIndicator();
         
