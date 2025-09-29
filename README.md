@@ -1,4 +1,6 @@
-# WAFake - Simulador de Chat W### 2. Configurar Mensajes
+# WAFake - Simulador de Chat
+
+### 2. Configurar Mensajes
 - Cada mensaje tiene:
   - **Autor**: Selecciona cuál de los 2 participantes envía el mensaje
   - **Texto**: El contenido del mensaje

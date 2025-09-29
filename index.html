@@ -22,7 +22,7 @@
 				<div class="participants">
 					<div class="participant">
 						<label>Nombre del contacto:</label>
-						<input type="text" id="participant2-name" value="Lucas Bonomo" placeholder="Nombre">
+						<input type="text" id="participant2-name" placeholder="Nombre">
 						<input type="url" id="participant2-avatar" placeholder="URL del avatar">
 					</div>
 				</div>
@@ -35,6 +35,16 @@
 					<!-- Los mensajes se añadirán dinámicamente aquí -->
 				</div>
 				<button id="add-message" class="btn">+ Agregar Mensaje</button>
+			</div>
+
+			<!-- Configuración -->
+			<div class="config-section">
+				<h3>Configuración</h3>
+				<div class="config-controls">
+					<button id="save-config" class="btn btn-secondary">💾 Guardar Configuración</button>
+					<button id="load-config" class="btn btn-secondary">📁 Cargar Configuración</button>
+					<button id="download-sample" class="btn btn-info">📄 Descargar Ejemplo</button>
+				</div>
 			</div>
 
 			<!-- Controles de Simulación -->
@@ -53,7 +63,7 @@
 					<!-- Barra de Estado -->
 					<div class="phone-status-bar">
 						<div class="status-left">
-							<span>22:59</span>
+							<span>10:59</span>
 						</div>
 						<div class="status-right">
 							<span class="wifi icon"></span>
@@ -129,6 +139,13 @@
 		</div>
 	</div>
 
+	<!-- JavaScript Modules - Load in dependency order -->
+	<script src="assets/js/linkPreview.js"></script>
+	<script src="assets/js/messageManager.js"></script>
+	<script src="assets/js/configManager.js"></script>
+	<script src="assets/js/uiController.js"></script>
+	<script src="assets/js/simulationEngine.js"></script>
+	<script src="assets/js/simulator.js"></script>
 	<script src="script.js"></script>
 </body>
 
