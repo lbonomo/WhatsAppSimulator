@@ -8,31 +8,120 @@ class WAFakeSimulator {
         this.currentSimulation = null;
         this.messageIndex = 0;
         this.isSimulating = false;
+        this.linkCache = new Map(); // Cache para evitar múltiples requests
         
         this.init();
     }
 
     init() {
         this.setupEventListeners();
-        this.updateParticipantInputs();
         this.addDefaultMessages();
         this.updateChatHeader();
     }
 
+    // Detectar URLs en el texto
+    extractUrl(text) {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const urls = text.match(urlRegex);
+        return urls ? urls[0] : null; // Retorna la primera URL encontrada
+    }
+
+    // Obtener metadatos Open Graph de una URL usando múltiples proxies
+    async getOpenGraphData(url) {
+        // Verificar cache primero
+        if (this.linkCache.has(url)) {
+            console.log('Using cached data for:', url);
+            return this.linkCache.get(url);
+        }
+
+        console.log('Fetching OG data for:', url);
+
+        // Lista de proxies CORS para probar
+        const proxies = [
+            `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
+            `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            `https://cors-anywhere.herokuapp.com/${url}`
+        ];
+
+        for (const proxyUrl of proxies) {
+            try {
+                console.log(`Trying proxy: ${proxyUrl}`);
+                
+                // Agregar timeout de 5 segundos
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(proxyUrl, { 
+                    signal: controller.signal,
+                    headers: {
+                        'User-Agent': 'WAFake-Bot/1.0'
+                    }
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    console.log(`Proxy failed with status: ${response.status}`);
+                    continue;
+                }
+
+                const html = await response.text();
+                
+                if (html && html.length > 0) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const ogImage = doc.querySelector('meta[property="og:image"]');
+                    const ogTitle = doc.querySelector('meta[property="og:title"]');
+                    const ogDescription = doc.querySelector('meta[property="og:description"]');
+                    const title = doc.querySelector('title');
+                    
+                    // Si encontramos al menos algo útil, devolvemos los datos
+                    if (ogImage || ogTitle || title) {
+                        const data = {
+                            image: ogImage ? ogImage.getAttribute('content') : null,
+                            title: ogTitle ? ogTitle.getAttribute('content') : (title ? title.textContent.trim() : null),
+                            description: ogDescription ? ogDescription.getAttribute('content') : null,
+                            url: url
+                        };
+                        
+                        // Guardar en cache
+                        this.linkCache.set(url, data);
+                        return data;
+                    }
+                }
+            } catch (error) {
+                console.log(`Proxy error: ${error.message}`);
+                continue;
+            }
+        }
+
+        // Si todos los proxies fallan, crear una vista previa básica
+        console.log('All proxies failed, creating basic preview');
+        const basicData = this.createBasicPreview(url);
+        // Guardar en cache el resultado básico
+        this.linkCache.set(url, basicData);
+        return basicData;
+    }
+
+    // Crear vista previa básica cuando no se pueden obtener metadatos
+    createBasicPreview(url) {
+        try {
+            const urlObj = new URL(url);
+            return {
+                image: null,
+                title: urlObj.hostname,
+                description: 'Enlace web',
+                url: url,
+                isBasic: true
+            };
+        } catch (error) {
+            return null;
+        }
+    }
+
     setupEventListeners() {
-        // Inputs de participantes
-        document.getElementById('participant1-name').addEventListener('input', (e) => {
-            this.participants[1].name = e.target.value;
-            this.updateChatHeader();
-            this.renderMessages();
-        });
-        
-        document.getElementById('participant1-avatar').addEventListener('input', (e) => {
-            this.participants[1].avatar = e.target.value || 'assets/img/avatar-local.svg';
-            this.updateChatHeader();
-            this.renderMessages();
-        });
-        
+        // Input de contacto
         document.getElementById('participant2-name').addEventListener('input', (e) => {
             this.participants[2].name = e.target.value;
             this.updateChatHeader();
@@ -40,7 +129,7 @@ class WAFakeSimulator {
         });
         
         document.getElementById('participant2-avatar').addEventListener('input', (e) => {
-            this.participants[2].avatar = e.target.value || 'assets/img/avatar-remoto.svg';
+            this.participants[2].avatar = e.target.value || 'assets/img/avatar-lucas.svg';
             this.updateChatHeader();
             this.renderMessages();
         });
@@ -50,11 +139,6 @@ class WAFakeSimulator {
         document.getElementById('start-simulation').addEventListener('click', () => this.startSimulation());
         document.getElementById('stop-simulation').addEventListener('click', () => this.stopSimulation());
         document.getElementById('reset-simulation').addEventListener('click', () => this.resetSimulation());
-    }
-
-    updateParticipantInputs() {
-        document.getElementById('participant1-name').value = this.participants[1].name;
-        document.getElementById('participant2-name').value = this.participants[2].name;
     }
 
     addDefaultMessages() {
@@ -76,6 +160,12 @@ class WAFakeSimulator {
                 author: 2,
                 text: 'Te puedo hacer una consulta?',
                 delay: 3000
+            },
+            {
+                id: 4,
+                author: 1,
+                text: '¡Por supuesto! Te dejo nuestro sitio web: https://esencianomada.com.ar/producto/club-de-nuit-sillage/',
+                delay: 2000
             }
         ];
         this.renderMessageConfigs();
@@ -109,8 +199,8 @@ class WAFakeSimulator {
                 
                 <label>Autor:</label>
                 <select onchange="simulator.updateMessage(${message.id}, 'author', this.value)">
-                    <option value="1" ${message.author === 1 ? 'selected' : ''}>${this.participants[1].name}</option>
-                    <option value="2" ${message.author === 2 ? 'selected' : ''}>${this.participants[2].name}</option>
+                    <option value="1" ${message.author === 1 ? 'selected' : ''}>Tú (mensaje verde, derecha)</option>
+                    <option value="2" ${message.author === 2 ? 'selected' : ''}>${this.participants[2].name} (mensaje blanco, izquierda)</option>
                 </select>
                 
                 <label>Mensaje:</label>
@@ -221,7 +311,7 @@ class WAFakeSimulator {
         document.getElementById('chat-typing-status').classList.add('hidden');
     }
 
-    displayMessage(message) {
+    async displayMessage(message) {
         const messagesContainer = document.getElementById('chat-messages');
         const participant = this.participants[message.author];
         
@@ -234,18 +324,90 @@ class WAFakeSimulator {
             minute: '2-digit' 
         });
         
-        messageDiv.innerHTML = `
-            <div class="message-bubble">
-                <p class="message-text">${message.text}</p>
-                <div class="message-time">${timeString}</div>
-            </div>
-        `;
+        // Detectar si el mensaje contiene una URL
+        const url = this.extractUrl(message.text);
+        let linkPreviewHTML = '';
         
-        messagesContainer.appendChild(messageDiv);
-        this.scrollToBottom();
+        if (url) {
+            // Mostrar mensaje primero, luego cargar preview
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <p class="message-text">${message.text}</p>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            this.scrollToBottom();
+            
+            // Mostrar indicador de carga
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = `link-preview ${message.author === 1 ? 'sent' : 'received'}`;
+            loadingDiv.innerHTML = `
+                <div class="link-preview-content">
+                    <div class="link-preview-loading">
+                        <div class="loading-spinner"></div>
+                        Cargando vista previa...
+                    </div>
+                </div>
+            `;
+            messageDiv.appendChild(loadingDiv);
+            this.scrollToBottom();
+            
+            // Obtener datos Open Graph
+            const ogData = await this.getOpenGraphData(url);
+            
+            // Remover indicador de carga
+            loadingDiv.remove();
+            
+            // Siempre mostrar una vista previa, aunque sea básica
+            if (ogData) {
+                linkPreviewHTML = this.createLinkPreview(ogData);
+                
+                // Agregar preview debajo del mensaje
+                const previewDiv = document.createElement('div');
+                previewDiv.className = `link-preview ${message.author === 1 ? 'sent' : 'received'}`;
+                previewDiv.innerHTML = linkPreviewHTML;
+                
+                // Hacer que el preview sea clickeable
+                previewDiv.onclick = () => {
+                    window.open(url, '_blank');
+                };
+                previewDiv.style.cursor = 'pointer';
+                
+                messageDiv.appendChild(previewDiv);
+                this.scrollToBottom();
+            }
+        } else {
+            // Mensaje sin URL
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <p class="message-text">${message.text}</p>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            this.scrollToBottom();
+        }
         
         // Reproducir sonido (opcional)
         this.playMessageSound();
+    }
+
+    createLinkPreview(ogData) {
+        const isBasic = ogData.isBasic;
+        const iconClass = isBasic ? 'basic-preview' : '';
+        
+        return `
+            <div class="link-preview-content ${iconClass}">
+                ${ogData.image ? `<img src="${ogData.image}" alt="Preview" class="link-preview-image" onerror="this.style.display='none'">` : 
+                  (isBasic ? `<div class="link-preview-icon">🔗</div>` : '')}
+                <div class="link-preview-info">
+                    ${ogData.title ? `<div class="link-preview-title">${ogData.title}</div>` : ''}
+                    ${ogData.description ? `<div class="link-preview-description">${ogData.description}</div>` : ''}
+                    <div class="link-preview-url">${new URL(ogData.url).hostname}</div>
+                </div>
+            </div>
+        `;
     }
 
     scrollToBottom() {

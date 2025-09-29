@@ -9,9 +9,9 @@
 ## Características
 
 ✅ **Panel de Control Completo**
-- Configuración de 2 participantes: Local (derecha/verde) y Remoto (izquierda/blanco)
+- Configuración del contacto (nombre y avatar)
 - Gestión de mensajes con cantidad variable
-- Control de autor de cada mensaje
+- Control de autor de cada mensaje (Tú o el contacto)
 - Configuración de delays entre mensajes
 
 ✅ **Chat Realista**
@@ -20,6 +20,7 @@
 - Mensajes con burbujas y avatares
 - Timestamps automáticos
 - Efectos de sonido opcionales
+- **Vista previa de enlaces**: Muestra automáticamente og:image de URLs
 
 ✅ **Controles de Simulación**
 - Iniciar/Detener simulación
@@ -28,16 +29,17 @@
 
 ## Instrucciones de Uso
 
-### 1. Configurar Participantes
-- **Local (Derecha)**: Mensajes que aparecen con fondo verde a la derecha del chat
-- **Remoto (Izquierda)**: Mensajes que aparecen con fondo blanco a la izquierda del chat
-- Configura nombres y avatares para ambos participantes
+### 1. Configurar Contacto
+- **Nombre del contacto**: El nombre que aparecerá en el header del chat
+- **Avatar**: URL de imagen o dejarlo vacío para usar el avatar por defecto
+- Solo necesitas configurar el contacto, tus mensajes aparecerán automáticamente
 
 ### 2. Configurar Mensajes
 - Cada mensaje tiene:
-  - **Autor**: Selecciona entre Local (derecha/verde) o Remoto (izquierda/blanco)
-  - **Texto**: El contenido del mensaje (soporta saltos de línea)
+  - **Autor**: Selecciona entre "Tú" (verde/derecha) o el contacto (blanco/izquierda)
+  - **Texto**: El contenido del mensaje (soporta saltos de línea y URLs)
   - **Delay**: Tiempo en milisegundos antes de mostrar el mensaje
+- **URLs automáticas**: Si incluyes una URL, se mostrará automáticamente una vista previa con imagen
 
 ### 3. Gestión de Mensajes
 - **Agregar**: Usa el botón "Agregar Mensaje" para añadir nuevos mensajes
@@ -82,6 +84,7 @@ WAFake/
 - **Colores y estilos**: Similares a WhatsApp
 - **Timestamps**: Automáticos con hora actual
 - **Saltos de línea**: Los mensajes respetan los saltos de línea (\n)
+- **Vista previa de enlaces**: Detección automática de URLs con metadatos Open Graph
 - Avatares automáticos generados si no se especifica URL
 - Colores y estilos similares a WhatsApp
 - Timestamps automáticos con hora actual
