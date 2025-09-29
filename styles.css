@@ -511,6 +511,421 @@ body {
 	color: rgba(0, 0, 0, 0.45);
 }
 
+/* Estilos específicos para mensajes de voz */
+/* Mensajes de voz - Estilo WhatsApp */
+.voice-message .message-bubble {
+	min-width: 280px;
+	max-width: 320px;
+	padding: 8px 12px;
+	position: relative;
+}
+
+.audio-message {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	position: relative;
+	min-height: 48px;
+}
+
+/* Botón de play/pause */
+.audio-play-pause {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: #52a6fe;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.audio-play-pause:hover {
+	background: #4285f4;
+	transform: scale(1.05);
+}
+
+.audio-play-pause::before {
+	content: '';
+	width: 0;
+	height: 0;
+	border-left: 8px solid white;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	margin-left: 2px;
+}
+
+.audio-play-pause.playing::before {
+	border: none;
+	width: 8px;
+	height: 10px;
+	background: white;
+	box-shadow: 3px 0 0 white;
+	margin-left: 0;
+}
+
+/* Contenedor de la forma de onda */
+.audio-waveform {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	position: relative;
+}
+
+/* SVG de forma de onda personalizada */
+.audio-waveform svg {
+	flex: 1;
+	height: 24px;
+	min-width: 150px;
+	cursor: pointer;
+}
+
+.audio-waveform svg rect {
+	fill: #bebebe;
+	transition: fill 0.2s ease;
+}
+
+.audio-waveform svg rect.played {
+	fill: #52a6fe;
+}
+
+/* Cursor de progreso animado */
+.audio-cursor {
+	fill: #52a6fe;
+	transition: cx 0.1s ease;
+	filter: drop-shadow(0 0 3px rgba(82, 166, 254, 0.5));
+}
+
+/* Duración del audio */
+.audio-duration {
+	font-size: 12px;
+	color: #8e8e93;
+	font-weight: 400;
+	min-width: 30px;
+	text-align: left;
+}
+
+/* Estado de lectura y hora */
+.audio-read-status {
+	position: absolute;
+	bottom: -18px;
+	right: 5px;
+	font-size: 11px;
+	color: #8e8e93;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Avatar del perfil para mensajes recibidos */
+.audio-profile {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 1px solid #fff;
+	background: #fff;
+}
+
+.audio-profile img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Ícono de micrófono para mensajes recibidos */
+.micro-whats-received-container {
+	position: absolute;
+	top: 2px;
+	right: 20px;
+	width: 14px;
+	height: 14px;
+}
+
+.micro-whats-received {
+	width: 100%;
+	height: 100%;
+	opacity: 0.7;
+}
+
+/* Estilos específicos para mensajes enviados */
+.message.sent .audio-play-pause {
+	background: #dcf8c6;
+	border: 1px solid #25d366;
+}
+
+.message.sent .audio-play-pause::before {
+	border-left-color: #25d366;
+}
+
+.message.sent .audio-play-pause.playing::before {
+	background: #25d366;
+	box-shadow: 3px 0 0 #25d366;
+}
+
+.message.sent .audio-waveform svg rect {
+	fill: #a8d08d;
+}
+
+.message.sent .audio-waveform svg rect.played {
+	fill: #25d366;
+}
+
+.message.sent .audio-cursor {
+	fill: #25d366;
+	filter: drop-shadow(0 0 3px rgba(37, 211, 102, 0.5));
+}
+
+.message.sent .audio-duration {
+	color: #4a4a4a;
+}
+
+.message.sent .audio-read-status {
+	color: #4a4a4a;
+}
+
+/* Ocultar elementos específicos de mensajes enviados */
+.message.sent .audio-profile,
+.message.sent .micro-whats-received-container {
+	display: none;
+}
+
+/* Estados de reproducción */
+.voice-message.playing .audio-play-pause {
+	animation: pulse 1.5s ease-in-out infinite;
+}
+
+.voice-placeholder {
+	text-align: center;
+	color: #999;
+	font-size: 12px;
+	margin-top: 8px;
+	padding: 4px;
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+@keyframes pulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.voice-message .message-bubble {
+		min-width: 250px;
+		max-width: 280px;
+	}
+	
+	.audio-waveform svg {
+		min-width: 120px;
+	}
+}
+
+/* Estilos para configuración de mensajes de voz */
+.voice-message-config {
+	border: 2px solid #25d366;
+	background: #f0f9f0;
+}
+
+.voice-config-content {
+	padding: 15px;
+}
+
+.audio-upload-area {
+	border: 2px dashed #ccc;
+	border-radius: 8px;
+	padding: 20px;
+	text-align: center;
+	background: white;
+	transition: all 0.3s ease;
+}
+
+.audio-upload-area.drag-over {
+	border-color: #25d366;
+	background: #f0f9f0;
+}
+
+.audio-upload-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.upload-icon {
+	font-size: 48px;
+	color: #25d366;
+}
+
+.upload-text {
+	color: #666;
+	line-height: 1.4;
+}
+
+.select-audio-btn {
+	background: none;
+	border: none;
+	color: #25d366;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.upload-formats {
+	font-size: 12px;
+	color: #999;
+}
+
+.audio-loaded {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.audio-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	background: #f8f9fa;
+	border-radius: 6px;
+}
+
+.audio-filename {
+	font-weight: 500;
+	color: #333;
+}
+
+.audio-duration {
+	color: #666;
+	font-size: 12px;
+}
+
+.change-audio-btn, .remove-audio-btn {
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: white;
+	cursor: pointer;
+	margin: 0 5px;
+}
+
+.change-audio-btn:hover {
+	background: #25d366;
+	color: white;
+}
+
+.remove-audio-btn:hover {
+	background: #dc3545;
+	color: white;
+}
+
+.audio-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	color: #25d366;
+}
+
+.loading-spinner {
+	width: 24px;
+	height: 24px;
+	border: 3px solid #f3f3f3;
+	border-top: 3px solid #25d366;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.audio-preview {
+	margin-top: 15px;
+	padding: 10px;
+	background: #f8f9fa;
+	border-radius: 8px;
+	border: 1px solid #e9ecef;
+}
+
+.preview-header {
+	font-weight: 500;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.voice-message-preview {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.preview-play-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
+	background: #25d366;
+	color: white;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.preview-waveform {
+	flex: 1;
+	height: 24px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.preview-progress-bar {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	background: linear-gradient(90deg, 
+		rgba(255,255,255,0.3) 0%, 
+		rgba(255,255,255,0.1) 50%, 
+		rgba(255,255,255,0.3) 100%);
+}
+
+.preview-progress {
+	height: 100%;
+	background: #25d366;
+	border-radius: 12px;
+	transition: width 0.1s ease;
+}
+
+.preview-duration {
+	font-size: 11px;
+	color: #666;
+	min-width: 30px;
+	text-align: right;
+}
+
+.message-controls {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.message-controls .btn {
+	flex: 1;
+	min-width: 140px;
+}
+
 /* Previsualizaciones de enlaces */
 .link-preview {
 	margin: 8px 0;
@@ -796,6 +1211,228 @@ body {
 		aspect-ratio: 9 / 16;
 		margin: 0 auto;
 	}
+}
+
+/* Estilos específicos para configuración de mensajes de voz */
+.message-config.voice-message-config {
+	border-color: #25d366;
+	background: #f0fdf4;
+}
+
+.voice-config-content {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+/* Estilos para carga de audio */
+.audio-upload-area {
+	border: 2px dashed #ddd;
+	border-radius: 8px;
+	padding: 20px;
+	text-align: center;
+	transition: all 0.3s ease;
+	background: #fafafa;
+}
+
+.audio-upload-area.drag-over {
+	border-color: #25d366;
+	background: #f0fdf4;
+}
+
+.audio-upload-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.upload-icon {
+	font-size: 48px;
+	opacity: 0.6;
+}
+
+.upload-text {
+	color: #666;
+	line-height: 1.4;
+}
+
+.select-audio-btn {
+	background: #25d366;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.select-audio-btn:hover {
+	background: #128c7e;
+}
+
+.upload-formats {
+	font-size: 12px;
+	color: #999;
+	margin-top: 5px;
+}
+
+.audio-loaded {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px;
+	background: white;
+	border: 1px solid #25d366;
+	border-radius: 4px;
+}
+
+.audio-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
+}
+
+.audio-filename {
+	font-weight: 500;
+	color: #333;
+}
+
+.audio-duration {
+	font-size: 12px;
+	color: #666;
+}
+
+.change-audio-btn,
+.remove-audio-btn {
+	padding: 4px 8px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.change-audio-btn {
+	background: #007bff;
+	color: white;
+}
+
+.change-audio-btn:hover {
+	background: #0056b3;
+}
+
+.remove-audio-btn {
+	background: #ff4757;
+	color: white;
+}
+
+.remove-audio-btn:hover {
+	background: #ff3742;
+}
+
+.audio-loading {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: #666;
+}
+
+.loading-spinner {
+	width: 20px;
+	height: 20px;
+	border: 2px solid #ddd;
+	border-top: 2px solid #25d366;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* Vista previa de audio */
+.audio-preview {
+	margin-top: 15px;
+	padding: 10px;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.preview-header {
+	font-weight: 500;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.voice-message-preview {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px;
+	background: #f8f9fa;
+	border-radius: 4px;
+}
+
+.preview-play-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
+	background: #25d366;
+	color: white;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.preview-play-btn:hover {
+	background: #128c7e;
+}
+
+.preview-waveform {
+	flex: 1;
+	height: 24px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	overflow: hidden;
+	position: relative;
+}
+
+.preview-progress-bar {
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.preview-progress {
+	height: 100%;
+	background: #25d366;
+	border-radius: 12px;
+	transition: width 0.1s ease;
+}
+
+.preview-duration {
+	font-size: 11px;
+	color: #666;
+	min-width: 30px;
+	text-align: right;
+}
+
+/* Controles de mensajes */
+.message-controls {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.message-controls .btn {
+	flex: 1;
+	min-width: 140px;
 }
 
 /* Scrollbar personalizado */

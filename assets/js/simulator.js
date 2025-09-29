@@ -9,6 +9,7 @@ class WAFakeSimulator {
         this.linkPreviewManager = new LinkPreviewManager();
         this.messageManager = new MessageManager();
         this.uiController = new UIController(this.participants, this.linkPreviewManager);
+        this.voiceMessageManager = new VoiceMessageManager(this.messageManager, this.uiController);
         this.simulationEngine = new SimulationEngine(
             this.messageManager, 
             this.uiController, 
@@ -28,7 +29,12 @@ class WAFakeSimulator {
 
     // Métodos que actúan como bridge entre la UI y los módulos
     addMessage() {
-        this.messageManager.addMessage();
+        this.messageManager.addMessage('text');
+        this.renderMessageConfigs();
+    }
+
+    addVoiceMessage() {
+        this.messageManager.addMessage('voice');
         this.renderMessageConfigs();
     }
 
@@ -45,7 +51,7 @@ class WAFakeSimulator {
     }
 
     renderMessageConfigs() {
-        this.messageManager.renderMessageConfigs(this.participants);
+        this.messageManager.renderMessageConfigs(this.participants, this.voiceMessageManager);
     }
 
     startSimulation() {

@@ -1,0 +1,16 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo del teléfono -->
+  <rect x="6" y="2" width="20" height="28" rx="4" ry="4" fill="#333" stroke="#666" stroke-width="1"/>
+  
+  <!-- Pantalla -->
+  <rect x="8" y="6" width="16" height="20" rx="2" ry="2" fill="#25d366"/>
+  
+  <!-- Burbujas de chat -->
+  <rect x="10" y="8" width="8" height="3" rx="1.5" fill="#dcf8c6"/>
+  <rect x="14" y="12" width="8" height="3" rx="1.5" fill="#fff"/>
+  <rect x="10" y="16" width="10" height="3" rx="1.5" fill="#dcf8c6"/>
+  
+  <!-- Icono de WhatsApp (simplificado) -->
+  <circle cx="16" cy="20" r="3" fill="#fff"/>
+  <path d="M14.5 19.5c0.5-0.5 1-0.5 1.5 0s0.5 1 0 1.5l-1 1c-0.5 0.5-1 0.5-1.5 0s-0.5-1 0-1.5l1-1z" fill="#25d366"/>
+</svg>
