@@ -1,8 +1,8 @@
 class WAFakeSimulator {
     constructor() {
         this.participants = {
-            1: { name: 'Local (Derecha)', avatar: 'https://via.placeholder.com/40/4CAF50/white?text=L' },
-            2: { name: 'Remoto (Izquierda)', avatar: 'https://via.placeholder.com/40/2196F3/white?text=R' }
+            1: { name: 'Local (Derecha)', avatar: 'assets/img/avatar-local.svg' },
+            2: { name: 'Remoto (Izquierda)', avatar: 'assets/img/avatar-lucas.svg' }
         };
         this.messages = [];
         this.currentSimulation = null;
@@ -28,7 +28,7 @@ class WAFakeSimulator {
         });
         
         document.getElementById('participant1-avatar').addEventListener('input', (e) => {
-            this.participants[1].avatar = e.target.value || `https://via.placeholder.com/40/4CAF50/white?text=${this.participants[1].name.charAt(0)}`;
+            this.participants[1].avatar = e.target.value || 'assets/img/avatar-local.svg';
             this.updateChatHeader();
             this.renderMessages();
         });
@@ -40,7 +40,7 @@ class WAFakeSimulator {
         });
         
         document.getElementById('participant2-avatar').addEventListener('input', (e) => {
-            this.participants[2].avatar = e.target.value || `https://via.placeholder.com/40/2196F3/white?text=${this.participants[2].name.charAt(0)}`;
+            this.participants[2].avatar = e.target.value || 'assets/img/avatar-remoto.svg';
             this.updateChatHeader();
             this.renderMessages();
         });
@@ -61,19 +61,19 @@ class WAFakeSimulator {
         this.messages = [
             {
                 id: 1,
-                author: 1,
+                author: 2,
                 text: 'Buen día',
                 delay: 1000
             },
             {
                 id: 2,
-                author: 2,
+                author: 1,
                 text: 'Hola!!! ✨ ¡Gracias por comunicarte con Esencia Nómada!\n👍 Nuestro horario de atención es de\nlunes a viernes de 9:00 a 17:00 🏠\n🧭 Déjanos tu consulta y te responderemos a la brevedad.\nSaludos 🌱🌈✨🌺',
                 delay: 2000
             },
             {
                 id: 3,
-                author: 1,
+                author: 2,
                 text: 'Te puedo hacer una consulta?',
                 delay: 3000
             }

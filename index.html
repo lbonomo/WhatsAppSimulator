@@ -1,116 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAFake - Simulador WhatsApp</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>WAFake - Simulador WhatsApp</title>
+	<link rel="stylesheet" href="styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-        <!-- Panel de Control -->
-        <div class="control-panel">
-            <h2>Panel de Control</h2>
-            
-            <!-- Configuración de Participantes -->
-            <div class="participants-section">
-                <h3>Participantes</h3>
-                <div class="participant">
-                    <label>Local (Derecha) - Mensajes verdes:</label>
-                    <input type="text" id="participant1-name" value="Local (Derecha)" placeholder="Nombre">
-                    <input type="url" id="participant1-avatar" placeholder="URL del avatar">
-                </div>
-                <div class="participant">
-                    <label>Remoto (Izquierda) - Mensajes blancos:</label>
-                    <input type="text" id="participant2-name" value="Remoto (Izquierda)" placeholder="Nombre">
-                    <input type="url" id="participant2-avatar" placeholder="URL del avatar">
-                </div>
-            </div>
+	<div class="container">
+		<!-- Panel de Control -->
+		<div class="control-panel">
+			<h2>Panel de Control</h2>
 
-            <!-- Configuración de Mensajes -->
-            <div class="messages-section">
-                <h3>Mensajes</h3>
-                <div id="messages-list">
-                    <!-- Los mensajes se añadirán dinámicamente aquí -->
-                </div>
-                <button id="add-message" class="btn">+ Agregar Mensaje</button>
-            </div>
+			<!-- Configuración de Participantes -->
+			<div class="participants-section">
+				<h3>Participantes</h3>
+				<div class="participants">
+					<div class="participant">
+						<label>Local (Derecha) - Mensajes verdes:</label>
+						<input type="text" id="participant1-name" value="Local (Derecha)" placeholder="Nombre">
+						<input type="url" id="participant1-avatar" placeholder="URL del avatar">
+					</div>
+					<div class="participant">
+						<label>Remoto (Izquierda) - Mensajes blancos:</label>
+						<input type="text" id="participant2-name" value="Remoto (Izquierda)" placeholder="Nombre">
+						<input type="url" id="participant2-avatar" placeholder="URL del avatar">
+					</div>
+				</div>
+			</div>
 
-            <!-- Controles de Simulación -->
-            <div class="simulation-controls">
-                <button id="start-simulation" class="btn btn-primary">Iniciar Simulación</button>
-                <button id="stop-simulation" class="btn btn-secondary">Detener</button>
-                <button id="reset-simulation" class="btn btn-danger">Reiniciar</button>
-            </div>
-        </div>
+			<!-- Configuración de Mensajes -->
+			<div class="messages-section">
+				<h3>Mensajes</h3>
+				<div id="messages-list">
+					<!-- Los mensajes se añadirán dinámicamente aquí -->
+				</div>
+				<button id="add-message" class="btn">+ Agregar Mensaje</button>
+			</div>
 
-        <!-- Marco del Teléfono -->
-        <div class="phone-frame">
-            <!-- Botones físicos -->
-            <div class="power-button"></div>
-            <div class="volume-up"></div>
-            <div class="volume-down"></div>
-            
-            <div class="phone-screen">
-                <!-- Chat -->
-                <div class="chat-container">
-                    <!-- Barra de Estado -->
-                    <div class="phone-status-bar">
-                        <div class="status-left">
-                            <span>22:59</span>
-                        </div>
-                        <div class="status-right">
-                            <span>�</span>
-                            <span>📶</span>
-                            <span>�</span>
-                            <span>4G</span>
-                            <span>�</span>
-                            <span>53%</span>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-header">
-                        <div class="chat-avatar">
-                            <img id="chat-contact-avatar" src="https://via.placeholder.com/40" alt="Avatar">
-                        </div>
-                        <div class="chat-info">
-                            <h3 id="chat-contact-name">Chat</h3>
-                            <p id="chat-status">en línea</p>
-                            <p id="chat-typing-status" class="typing-status hidden">escribiendo...</p>
-                        </div>
-                    </div>
-                    
-                    <div class="chat-messages" id="chat-messages">
-                        <!-- Los mensajes aparecerán aquí -->
-                    </div>
+			<!-- Controles de Simulación -->
+			<div class="simulation-controls">
+				<button id="start-simulation" class="btn btn-primary">Iniciar Simulación</button>
+				<button id="stop-simulation" class="btn btn-secondary">Detener</button>
+				<button id="reset-simulation" class="btn btn-danger">Reiniciar</button>
+			</div>
+		</div>
 
-                    <!-- Indicador de escribiendo -->
-                    <div id="typing-indicator" class="typing-indicator hidden">
-                        <div class="typing-avatar">
-                            <img id="typing-avatar-img" src="https://via.placeholder.com/30" alt="Avatar">
-                        </div>
-                        <div class="typing-animation">
-                            <span class="typing-name" id="typing-name">Usuario</span> está escribiendo
-                            <div class="typing-dots">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
+		<!-- Marco del Teléfono -->
+		<div class="phone-frame">
+			<!-- Botones físicos -->
 
-                    <div class="chat-input">
-                        <input type="text" placeholder="Escribe un mensaje..." disabled>
-                        <button disabled>📤</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="phone-screen">
+				<!-- Chat -->
+				<div class="chat-container">
+					<!-- Barra de Estado -->
+					<div class="phone-status-bar">
+						<div class="status-left">
+							<span>22:59</span>
+						</div>
+						<div class="status-right">
+							<span>�</span>
+							<span>📶</span>
+							<span>�</span>
+							<span>4G</span>
+							<span>�</span>
+							<span>53%</span>
+						</div>
+					</div>
 
-    <script src="script.js"></script>
+					<div class="chat-header">
+						<div class="chat-avatar">
+							<img id="chat-contact-avatar" src="assets/img/avatar-default.svg" alt="Avatar">
+						</div>
+						<div class="chat-info">
+							<h3 id="chat-contact-name">Chat</h3>
+							<p id="chat-status">en línea</p>
+							<p id="chat-typing-status" class="typing-status hidden">escribiendo...</p>
+						</div>
+					</div>
+
+					<div class="chat-messages" id="chat-messages">
+						<!-- Los mensajes aparecerán aquí -->
+					</div>
+
+					<!-- Indicador de escribiendo -->
+					<div id="typing-indicator" class="typing-indicator hidden">
+						<div class="typing-avatar">
+							<img id="typing-avatar-img" src="assets/img/avatar-typing.svg" alt="Avatar">
+						</div>
+						<div class="typing-animation">
+							<span class="typing-name" id="typing-name">Usuario</span> está escribiendo
+							<div class="typing-dots">
+								<span></span>
+								<span></span>
+								<span></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="chat-input">
+						<input type="text" placeholder="Escribe un mensaje..." disabled>
+						<button disabled>📤</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
 </body>
+
 </html>

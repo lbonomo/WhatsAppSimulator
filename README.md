@@ -56,6 +56,12 @@ WAFake/
 ├── index.html          # Página principal con la interfaz
 ├── styles.css          # Estilos CSS con diseño de WhatsApp
 ├── script.js           # Lógica JavaScript del simulador
+├── assets/
+│   └── img/
+│       ├── avatar-local.svg    # Avatar por defecto para participante local
+│       ├── avatar-remoto.svg   # Avatar por defecto para participante remoto
+│       ├── avatar-default.svg  # Avatar genérico por defecto
+│       └── avatar-typing.svg   # Avatar pequeño para indicador
 └── README.md           # Este archivo
 ```
 
@@ -71,9 +77,11 @@ WAFake/
 - Panel de control colapsable en móviles
 
 ### Configuración Avanzada
-- Avatares automáticos generados si no se especifica URL
-- Colores y estilos similares a WhatsApp
-- Timestamps automáticos con hora actual
+- **Avatares locales**: Se incluyen avatares SVG por defecto que funcionan sin conexión
+- **Avatares personalizados**: Puedes agregar URLs de imágenes externas
+- **Colores y estilos**: Similares a WhatsApp
+- **Timestamps**: Automáticos con hora actual
+- **Saltos de línea**: Los mensajes respetan los saltos de línea (\n)
 - Avatares automáticos generados si no se especifica URL
 - Colores y estilos similares a WhatsApp
 - Timestamps automáticos con hora actual
