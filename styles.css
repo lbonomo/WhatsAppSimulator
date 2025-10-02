@@ -132,7 +132,7 @@ body {
 	.config-controls {
 		flex-direction: column;
 	}
-	
+
 	.config-controls .btn {
 		width: 100%;
 		margin-bottom: 5px;
@@ -445,12 +445,15 @@ body {
 /* Mensajes */
 .message {
 	display: flex;
-	margin-bottom: 8px;
+	margin-bottom: 20px;
 	align-items: flex-end;
 	opacity: 0;
 	transform: translateY(20px);
 	animation: messageAppear 0.3s ease forwards;
 	clear: both;
+	width: 100%;
+	max-width: 500px;
+	padding: 0 20px;
 }
 
 @keyframes messageAppear {
@@ -469,23 +472,75 @@ body {
 }
 
 .message-bubble {
-	max-width: 65%;
-	padding: 8px 12px;
-	border-radius: 7.5px;
+	/* Posición relativa para que el "pico" se posicione en base a la burbuja */
 	position: relative;
-	box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+	color: #111b21;
+	padding: 8px 12px;
+	border-radius: 10px;
+	width: fit-content;
+	/* El ancho se ajusta al contenido */
+	max-width: 80%;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 	margin: 2px 0;
+	word-wrap: break-word;
 }
 
+/* Mensajes enviados (derecha) */
 .message.sent .message-bubble {
-	background: #dcf8c6;
-	border-bottom-right-radius: 2px;
+	background-color: #dcf8c6;
+	border-top-right-radius: 0;
+	/* Esto une el "pico" con la burbuja */
 	margin-left: auto;
 }
 
+/* Pico para mensajes enviados */
+.message.sent .message-bubble::before {
+	content: '';
+	/* Es necesario para que el pseudo-elemento se muestre */
+	position: absolute;
+
+	/* Posicionamiento del pico */
+	top: 0;
+	/* Se alinea con la parte superior de la burbuja */
+	right: -8px;
+	/* Lo movemos 8px fuera de la burbuja, hacia la derecha */
+
+	/* Creación de la forma de triángulo (el "pico") */
+	width: 0;
+	height: 0;
+	border-top: 0px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #dcf8c6;
+	/* Este borde es el que forma el triángulo visible */
+}
+
+/* Mensajes recibidos (izquierda) */
 .message.received .message-bubble {
-	background: white;
-	border-bottom-left-radius: 2px;
+	background-color: #ffffff;
+	border-top-left-radius: 0;
+	/* Esto une el "pico" con la burbuja */
+}
+
+/* --- Aquí está la magia --- */
+/* Usamos el pseudo-elemento ::before para crear el "pico" */
+.message.received .message-bubble::before {
+	content: '';
+	/* Es necesario para que el pseudo-elemento se muestre */
+	position: absolute;
+
+	/* Posicionamiento del pico */
+	top: 0;
+	/* Se alinea con la parte superior de la burbuja */
+	left: -8px;
+	/* Lo movemos 8px fuera de la burbuja, hacia la izquierda */
+
+	/* Creación de la forma de triángulo (el "pico") */
+	width: 0;
+	height: 0;
+	border-top: 0px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #ffffff;
+	/* Este borde es el que forma el triángulo visible */
 }
 
 .message-text {
@@ -514,18 +569,102 @@ body {
 /* Estilos específicos para mensajes de voz */
 /* Mensajes de voz - Estilo WhatsApp */
 .voice-message .message-bubble {
-	min-width: 280px;
-	max-width: 320px;
-	padding: 8px 12px;
+	min-width: 320px;
+	max-width: 380px;
+	padding: 12px;
 	position: relative;
 }
 
+/* Contenedor principal del mensaje de voz */
+.audio-message {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	position: relative;
+	min-height: 60px;
+}
+
+/* Contenedor del avatar con ícono de micrófono */
+.voice-avatar-container {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.voice-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #f0f0f0;
+}
+
+.voice-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Ícono de micrófono en esquina inferior derecha del avatar */
+.voice-mic-icon {
+	position: absolute;
+	bottom: -2px;
+	right: -2px;
+	width: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.voice-mic-icon img {
+	width: 22px;
+	height: 22px;
+}
+
+/* Contenido principal (botón + waveform) */
+.voice-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* Fila superior: botón play + waveform */
+.voice-content>.audio-play-pause {
+	align-self: flex-start;
+}
+
+.audio-waveform-container {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 1;
+}
+
+/* Contenedor del waveform */
+.audio-waveform {
+	display: flex;
+	align-items: center;
+	flex: 1;
+}
+
+/* Reorganizar el layout para que sea horizontal */
 .audio-message {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	position: relative;
-	min-height: 48px;
+	gap: 12px;
+	flex-direction: row;
+}
+
+.message.received .audio-message {
+	flex-direction: row-reverse;
+}
+
+.voice-content {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 12px;
 }
 
 /* Botón de play/pause */
@@ -533,7 +672,6 @@ body {
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	background: #52a6fe;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -544,48 +682,42 @@ body {
 }
 
 .audio-play-pause:hover {
-	background: #4285f4;
 	transform: scale(1.05);
 }
 
-.audio-play-pause::before {
-	content: '';
-	width: 0;
-	height: 0;
-	border-left: 8px solid white;
-	border-top: 5px solid transparent;
-	border-bottom: 5px solid transparent;
-	margin-left: 2px;
+.audio-play-pause .play-icon,
+.audio-play-pause .pause-icon {
+	width: 28px;
+	height: 28px;
+	filter: brightness(0) saturate(100%) invert(67%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(67%) contrast(1); /* Color #aaaaaa */
+	display: block;
 }
 
-.audio-play-pause.playing::before {
-	border: none;
-	width: 8px;
-	height: 10px;
-	background: white;
-	box-shadow: 3px 0 0 white;
-	margin-left: 0;
+.audio-play-pause .pause-icon {
+	display: none;
 }
 
-/* Contenedor de la forma de onda */
-.audio-waveform {
+/* Contenedor de waveform reorganizado */
+.audio-waveform-container {
 	flex: 1;
 	display: flex;
-	align-items: center;
-	gap: 8px;
-	position: relative;
+	flex-direction: column;
+	gap: 4px;
 }
 
-/* SVG de forma de onda personalizada */
+.audio-waveform {
+	width: 100%;
+}
+
+/* SVG de forma de onda */
 .audio-waveform svg {
-	flex: 1;
+	width: 100%;
 	height: 24px;
-	min-width: 150px;
 	cursor: pointer;
 }
 
 .audio-waveform svg rect {
-	fill: #bebebe;
+	fill: #aaaaaa;
 	transition: fill 0.2s ease;
 }
 
@@ -596,82 +728,38 @@ body {
 /* Cursor de progreso animado */
 .audio-cursor {
 	fill: #52a6fe;
-	transition: cx 0.1s ease;
+	transition: cx 0.05s linear;
 	filter: drop-shadow(0 0 3px rgba(82, 166, 254, 0.5));
 }
 
-/* Duración del audio */
+/* Información debajo del waveform */
+.audio-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 2px;
+	flex-direction: row;
+	padding: 0;
+	margin: 0;
+}
+
 .audio-duration {
 	font-size: 12px;
 	color: #8e8e93;
 	font-weight: 400;
-	min-width: 30px;
-	text-align: left;
 }
 
-/* Estado de lectura y hora */
-.audio-read-status {
-	position: absolute;
-	bottom: -18px;
-	right: 5px;
-	font-size: 11px;
-	color: #8e8e93;
+.audio-time-status {
 	display: flex;
 	align-items: center;
 	gap: 4px;
-}
-
-/* Avatar del perfil para mensajes recibidos */
-.audio-profile {
-	position: absolute;
-	top: -2px;
-	right: -2px;
-	width: 16px;
-	height: 16px;
-	border-radius: 50%;
-	overflow: hidden;
-	border: 1px solid #fff;
-	background: #fff;
-}
-
-.audio-profile img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-/* Ícono de micrófono para mensajes recibidos */
-.micro-whats-received-container {
-	position: absolute;
-	top: 2px;
-	right: 20px;
-	width: 14px;
-	height: 14px;
-}
-
-.micro-whats-received {
-	width: 100%;
-	height: 100%;
-	opacity: 0.7;
+	font-size: 11px;
+	color: #8e8e93;
 }
 
 /* Estilos específicos para mensajes enviados */
-.message.sent .audio-play-pause {
-	background: #dcf8c6;
-	border: 1px solid #25d366;
-}
-
-.message.sent .audio-play-pause::before {
-	border-left-color: #25d366;
-}
-
-.message.sent .audio-play-pause.playing::before {
-	background: #25d366;
-	box-shadow: 3px 0 0 #25d366;
-}
-
 .message.sent .audio-waveform svg rect {
-	fill: #a8d08d;
+	fill: #aaaaaa;
 }
 
 .message.sent .audio-waveform svg rect.played {
@@ -683,18 +771,27 @@ body {
 	filter: drop-shadow(0 0 3px rgba(37, 211, 102, 0.5));
 }
 
-.message.sent .audio-duration {
+.message.sent .audio-duration,
+.message.sent .audio-time-status {
 	color: #4a4a4a;
 }
 
-.message.sent .audio-read-status {
-	color: #4a4a4a;
+.message.sent .message-status {
+	color: #4fc3f7;
+	letter-spacing: -9px;
+	font-size: 15px;
 }
 
-/* Ocultar elementos específicos de mensajes enviados */
-.message.sent .audio-profile,
-.message.sent .micro-whats-received-container {
-	display: none;
+/* Sobrescribir picos para mensajes de voz enviados */
+.message.sent.voice-message .message-bubble::before {
+	border-left-color: #dcf8c6;
+	/* Mantener el color verde para mensajes enviados */
+}
+
+/* Sobrescribir picos para mensajes de voz recibidos */
+.message.received.voice-message .message-bubble::before {
+	border-right-color: #ffffff;
+	/* Mantener el color blanco para mensajes recibidos */
 }
 
 /* Estados de reproducción */
@@ -713,19 +810,22 @@ body {
 }
 
 @keyframes pulse {
-	0%, 100% { transform: scale(1); }
-	50% { transform: scale(1.05); }
+
+	0%,
+	100% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.05);
+	}
 }
 
 /* Responsive */
 @media (max-width: 768px) {
 	.voice-message .message-bubble {
-		min-width: 250px;
-		max-width: 280px;
-	}
-	
-	.audio-waveform svg {
-		min-width: 120px;
+		min-width: 280px;
+		max-width: 320px;
 	}
 }
 
@@ -789,15 +889,6 @@ body {
 	gap: 10px;
 }
 
-.audio-info {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px;
-	background: #f8f9fa;
-	border-radius: 6px;
-}
-
 .audio-filename {
 	font-weight: 500;
 	color: #333;
@@ -808,7 +899,8 @@ body {
 	font-size: 12px;
 }
 
-.change-audio-btn, .remove-audio-btn {
+.change-audio-btn,
+.remove-audio-btn {
 	padding: 8px 12px;
 	border: 1px solid #ddd;
 	border-radius: 4px;
@@ -845,8 +937,13 @@ body {
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .audio-preview {
@@ -894,10 +991,10 @@ body {
 	width: 100%;
 	height: 100%;
 	position: relative;
-	background: linear-gradient(90deg, 
-		rgba(255,255,255,0.3) 0%, 
-		rgba(255,255,255,0.1) 50%, 
-		rgba(255,255,255,0.3) 100%);
+	background: linear-gradient(90deg,
+			rgba(255, 255, 255, 0.3) 0%,
+			rgba(255, 255, 255, 0.1) 50%,
+			rgba(255, 255, 255, 0.3) 100%);
 }
 
 .preview-progress {
@@ -1056,8 +1153,13 @@ body {
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* Indicador de escribiendo */
@@ -1288,13 +1390,6 @@ body {
 	border-radius: 4px;
 }
 
-.audio-info {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	flex: 1;
-}
-
 .audio-filename {
 	font-weight: 500;
 	color: #333;
@@ -1349,8 +1444,13 @@ body {
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* Vista previa de audio */

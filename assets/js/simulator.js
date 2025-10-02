@@ -1,8 +1,8 @@
 class WAFakeSimulator {
     constructor() {
         this.participants = {
-            1: { name: 'Local (Derecha)', avatar: 'assets/img/avatar-default.svg' },
-            2: { name: 'Nombre', avatar: 'assets/img/avatar-default.svg' }
+            1: { name: 'Tú', avatar: 'assets/img/avatar-default.svg' },
+            2: { name: 'Contacto', avatar: 'assets/img/avatar-default.svg' }
         };
         
         // Inicializar módulos

@@ -5,32 +5,7 @@ class MessageManager {
 
     // Inicializar con mensajes por defecto
     addDefaultMessages() {
-        this.messages = [
-            {
-                id: 1,
-                author: 2,
-                text: 'Buen día',
-                delay: 1000
-            },
-            {
-                id: 2,
-                author: 1,
-                text: 'Hola!!! ✨ ¡Gracias por comunicarte con Esencia Nómada!\n👍 Nuestro horario de atención es de\nlunes a viernes de 9:00 a 17:00 🏠\n🧭 Déjanos tu consulta y te responderemos a la brevedad.\nSaludos 🌱🌈✨🌺',
-                delay: 2000
-            },
-            {
-                id: 3,
-                author: 2,
-                text: 'Te puedo hacer una consulta?',
-                delay: 3000
-            },
-            {
-                id: 4,
-                author: 1,
-                text: '¡Por supuesto! Te dejo nuestro sitio web: https://esencianomada.com.ar/producto/club-de-nuit-sillage/',
-                delay: 2000
-            }
-        ];
+        this.messages = []; // Sin mensajes iniciales
     }
 
     // Agregar un nuevo mensaje

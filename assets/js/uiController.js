@@ -105,31 +105,50 @@ class UIController {
         console.log('Datos del audio:', { hasAudio, audioData: !!message.audioData, duration }); // Debug
         
         // Generar forma de onda aleatoria pero reproducible
-        const waveformBars = this.generateWaveform(message.id || 0, 75);
+        const waveformData = this.generateWaveform(message.id || 0, 75);
+        const svgWidth = waveformData.totalWidth;
         
         messageDiv.innerHTML = `
             <div class="message-bubble">
                 <div class="audio-message">
-                    <div class="audio-play-pause" data-message-id="${message.id}">
-                    </div>
-                    <div class="audio-waveform">
-                        <svg width="150" height="24" viewBox="0 0 150 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            ${waveformBars}
-                            <circle cx="0" cy="12" r="5" fill="#52a6fe" class="audio-cursor" style="opacity: 0;"></circle>
-                        </svg>
-                        <div class="audio-duration">${formattedDuration}</div>
-                        <div class="audio-read-status">
-                            <span>${timeString}</span>
+                    <!-- Avatar con ícono de micrófono -->
+                    <div class="voice-avatar-container">
+                        <div class="voice-avatar">
+                            <img src="assets/img/avatar-default.svg" alt="avatar">
+                        </div>
+                        <div class="voice-mic-icon">
+                            <img src="assets/img/phone/micro-whats-received.svg" alt="mic">
                         </div>
                     </div>
-                    ${isReceived ? `
-                        <div class="audio-profile">
-                            <img src="assets/img/avatar-remoto.svg" alt="profile">
+                    
+                    <!-- Contenido principal del audio -->
+                    <div class="voice-content">
+                        <!-- Botón play/pause -->
+                        <div class="audio-play-pause" data-message-id="${message.id}">
+                            <img src="assets/img/phone/play.svg" class="play-icon" alt="play">
+                            <img src="assets/img/phone/pause.svg" class="pause-icon" alt="pause" style="display: none;">
                         </div>
-                        <div class="micro-whats-received-container">
-                            <img src="assets/img/phone/micro-whats-received.svg" class="micro-whats-received" alt="received icon">
+                        
+                        <!-- Forma de onda -->
+                        <div class="audio-waveform-container">
+                            <div class="audio-waveform">
+                                <svg width="${svgWidth}" height="24" viewBox="0 0 ${svgWidth} 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    ${waveformData.bars}
+                                    <circle cx="0" cy="12" r="5" fill="#52a6fe" class="audio-cursor" style="opacity: 0;"></circle>
+                                </svg>
+                            </div>
+                            
+                            <!-- Información debajo del waveform -->
+                            <div class="audio-info">
+                                <div class="audio-duration">${formattedDuration}</div>
+                                <div class="audio-time-status">
+                                    <span class="message-time">${timeString}</span>
+                                    ${message.author === 1 ? '<span class="message-status">✓✓</span>' : ''}
+                                </div>
+                            </div>
                         </div>
-                    ` : ''}
+                    </div>
+                    
                     ${!hasAudio ? '<div class="voice-placeholder">📎 Audio no disponible</div>' : ''}
                 </div>
             </div>
@@ -151,6 +170,9 @@ class UIController {
         const barWidth = 2;
         const barSpacing = 4;
         
+        // Calcular el ancho total real del SVG basado en las barras
+        const totalWidth = (barCount - 1) * barSpacing + barWidth;
+        
         // Usar semilla para reproducibilidad
         let rng = seed;
         function random() {
@@ -163,15 +185,18 @@ class UIController {
             const x = i * barSpacing;
             const y = (24 - height) / 2;
             
-            bars += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" fill="#bebebe" rx="1" ry="1" data-bar="${i}"></rect>`;
+            bars += `<rect x="${x}" y="${y}" width="${barWidth}" height="${height}" fill="#aaaaaa" rx="1" ry="1" data-bar="${i}"></rect>`;
         }
         
-        return bars;
+        // Retornar tanto las barras como el ancho total
+        return { bars, totalWidth };
     }
 
     // Configurar reproducción de mensaje de voz
     setupVoiceMessagePlayback(messageElement, message) {
         const playBtn = messageElement.querySelector('.audio-play-pause');
+        const playIcon = playBtn.querySelector('.play-icon');
+        const pauseIcon = playBtn.querySelector('.pause-icon');
         const svg = messageElement.querySelector('.audio-waveform svg');
         const cursor = messageElement.querySelector('.audio-cursor');
         const durationElement = messageElement.querySelector('.audio-duration');
@@ -180,6 +205,21 @@ class UIController {
         let audio = null;
         let isPlaying = false;
         let animationId = null;
+        
+        // Función para cambiar íconos
+        function setPlayState(playing) {
+            if (playing) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                playBtn.classList.add('playing');
+                messageElement.classList.add('playing');
+            } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+                playBtn.classList.remove('playing');
+                messageElement.classList.remove('playing');
+            }
+        }
         
         playBtn.addEventListener('click', async () => {
             console.log('Reproduciendo mensaje de voz:', message); // Debug
@@ -192,16 +232,21 @@ class UIController {
                 });
                 
                 audio.addEventListener('timeupdate', () => {
-                    if (audio.duration) {
-                        const progress = audio.currentTime / audio.duration;
-                        const svgWidth = 150;
-                        const cursorX = progress * svgWidth;
+                    if (audio.duration && audio.duration > 0) {
+                        const progress = Math.min(audio.currentTime / audio.duration, 1); // Asegurar que no exceda 1
                         
-                        // Mover cursor
+                        // Obtener el ancho real del SVG desde el viewBox
+                        const svgViewBox = svg.viewBox.baseVal;
+                        const svgWidth = svgViewBox.width;
+                        
+                        // Calcular posición del cursor de manera más precisa
+                        const cursorX = Math.max(0, Math.min(progress * svgWidth, svgWidth - 5));
+                        
+                        // Mover cursor suavemente
                         cursor.setAttribute('cx', cursorX);
                         cursor.style.opacity = '1';
                         
-                        // Actualizar barras reproducidas
+                        // Actualizar barras reproducidas con mejor precisión
                         const playedBars = Math.floor(progress * bars.length);
                         bars.forEach((bar, index) => {
                             if (index <= playedBars) {
@@ -212,8 +257,13 @@ class UIController {
                         });
                         
                         // Actualizar duración restante
-                        const remaining = audio.duration - audio.currentTime;
+                        const remaining = Math.max(0, audio.duration - audio.currentTime);
                         durationElement.textContent = this.formatDuration(Math.ceil(remaining));
+                        
+                        // Debug menos verboso
+                        if (Math.floor(audio.currentTime * 10) % 5 === 0) { // Log cada 0.5 segundos
+                            console.log(`Audio progreso: ${(progress * 100).toFixed(1)}% (${audio.currentTime.toFixed(1)}s/${audio.duration.toFixed(1)}s) - Cursor: ${cursorX.toFixed(1)}px`);
+                        }
                     }
                 });
                 
@@ -230,8 +280,7 @@ class UIController {
             if (isPlaying) {
                 audio.pause();
                 isPlaying = false;
-                playBtn.classList.remove('playing');
-                messageElement.classList.remove('playing');
+                setPlayState(false);
             } else {
                 try {
                     // Configurar audio para autoplay en simulación
@@ -241,8 +290,7 @@ class UIController {
                     
                     await audio.play();
                     isPlaying = true;
-                    playBtn.classList.add('playing');
-                    messageElement.classList.add('playing');
+                    setPlayState(true);
                     console.log('Audio reproduciéndose...'); // Debug
                 } catch (error) {
                     console.error('Error al reproducir audio:', error); // Debug
@@ -269,11 +317,15 @@ class UIController {
     // Resetear estado del mensaje de voz
     resetVoiceMessage(messageElement, message) {
         const playBtn = messageElement.querySelector('.audio-play-pause');
+        const playIcon = playBtn.querySelector('.play-icon');
+        const pauseIcon = playBtn.querySelector('.pause-icon');
         const cursor = messageElement.querySelector('.audio-cursor');
         const durationElement = messageElement.querySelector('.audio-duration');
         const bars = messageElement.querySelectorAll('.audio-waveform svg rect');
         
-        // Resetear botón
+        // Resetear íconos
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
         playBtn.classList.remove('playing');
         messageElement.classList.remove('playing');
         
