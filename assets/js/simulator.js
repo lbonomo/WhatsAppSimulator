@@ -1,4 +1,4 @@
-class WAFakeSimulator {
+class JAWSSimulator {
     constructor() {
         // Inicializar configuración de chat primero
         this.chatConfigManager = new ChatConfigManager();

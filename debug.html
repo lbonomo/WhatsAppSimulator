@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug WAFake</title>
+    <title>Debug JAWS</title>
 </head>
 <body>
-    <h1>Debug WAFake Simulator</h1>
+    <h1>Debug JAWS Simulator</h1>
     <button id="test-add-message" onclick="testAddMessage()">Test Agregar Mensaje</button>
     <div id="debug-output"></div>
 
@@ -57,7 +57,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 log('DOMContentLoaded - Creating simulator...');
-                window.simulator = new WAFakeSimulator();
+                window.simulator = new JAWSSimulator();
                 log('Simulator created successfully');
             } catch (error) {
                 log('ERROR creating simulator: ' + error.message);

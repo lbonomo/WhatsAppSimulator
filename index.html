@@ -4,13 +4,81 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>WAFake - Simulador WhatsApp</title>
-	<link rel="icon" type="image/svg+xml" href="favicon.svg">
-	<link rel="alternate icon" href="favicon.svg">
+	
+	<!-- Título y descripción -->
+	<title>JAWS - Just another WhatsApp Simulator | Crea conversaciones falsas realistas</title>
+	<meta name="description" content="Simulador de WhatsApp gratuito para crear conversaciones falsas realistas. Personaliza avatares, mensajes de texto y voz. Perfecto para capturas de pantalla y contenido educativo.">
+	<meta name="keywords" content="whatsapp, simulador, fake, conversacion, chat, mensaje, texto, voz, avatar, captura, pantalla, whatsapp falso, crear chat, conversacion ficticia">
+	<meta name="author" content="JAWS">
+	<meta name="robots" content="index, follow">
+	<meta name="rating" content="general">
+	<meta name="distribution" content="global">
+	<meta name="language" content="Spanish">
+	<meta name="revisit-after" content="7 days">
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://jaws.queuauu.com/">
+	<meta property="og:title" content="JAWS - Just another WhatsApp Simulator">
+	<meta property="og:description" content="Crea conversaciones de WhatsApp falsas y realistas. Personaliza avatares, mensajes de texto y voz para capturas de pantalla perfectas.">
+	<meta property="og:image" content="https://jaws.queuauu.com/assets/img/jaws-preview.svg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:site_name" content="JAWS">
+	<meta property="og:locale" content="es_ES">
+	
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image">
+	<meta property="twitter:url" content="https://jaws.queuauu.com/">
+	<meta property="twitter:title" content="JAWS - Just another WhatsApp Simulator">
+	<meta property="twitter:description" content="Crea conversaciones de WhatsApp falsas y realistas. Personaliza avatares, mensajes de texto y voz para capturas de pantalla perfectas.">
+	<meta property="twitter:image" content="https://jaws.queuauu.com/assets/img/jaws-preview.svg">
+	<meta property="twitter:creator" content="@jaws_simulator">
+	
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://jaws.queuauu.com/">
+	
+	<!-- Favicons -->
+	<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+	<link rel="alternate icon" href="assets/img/favicon.svg">
+	<link rel="apple-touch-icon" href="docs/wa-example.jpg">
+	
+	<!-- Theme color -->
+	<meta name="theme-color" content="#25d366">
+	<meta name="msapplication-TileColor" content="#25d366">
+	
+	<!-- PWA Manifest -->
+	<link rel="manifest" href="manifest.json">
+	
+	<!-- Estilos y fuentes -->
 	<link rel="stylesheet" href="styles.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+	
+	<!-- Schema.org structured data -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "JAWS - Just another WhatsApp Simulator",
+		"description": "Simulador de WhatsApp gratuito para crear conversaciones falsas realistas con personalización completa de avatares y mensajes.",
+		"url": "https://jaws.queuauu.com/",
+		"applicationCategory": "Entertainment",
+		"operatingSystem": "Web Browser",
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "USD"
+		},
+		"creator": {
+			"@type": "Organization",
+			"name": "JAWS"
+		},
+		"image": "https://jaws.queuauu.com/assets/img/jaws-preview.svg",
+		"screenshot": "https://jaws.queuauu.com/assets/img/jaws-preview.svg"
+	}
+	</script>
 
 	<!-- Microsoft Clarity -->
 	<script type="text/javascript">
@@ -23,9 +91,15 @@
 </head>
 
 <body>
-	<div class="container">
+	<!-- Header semántico -->
+	<header style="display: none;">
+		<h1>JAWS - Just another WhatsApp Simulator</h1>
+		<p>Crea conversaciones de WhatsApp falsas y realistas con avatares personalizados, mensajes de texto y voz.</p>
+	</header>
+
+	<main class="container" role="main">
 		<!-- Panel de Control -->
-		<div class="control-panel">
+		<aside class="control-panel" role="complementary" aria-label="Panel de configuración">
 			<h2>Panel de Control</h2>
 
 			<!-- Configuración General -->
@@ -108,10 +182,10 @@
 				<button id="stop-simulation" class="btn btn-secondary">Detener</button>
 				<button id="reset-simulation" class="btn btn-danger">Reiniciar</button>
 			</div>
-		</div>
+		</aside>
 
 		<!-- Marco del Teléfono -->
-		<div class="phone-frame">
+		<section class="phone-frame" role="main" aria-label="Simulador de WhatsApp">
 			<div class="phone-screen">
 				<!-- Chat -->
 				<div class="chat-container">
@@ -192,8 +266,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+		</section>
+	</main>
 
 	<!-- JavaScript Modules - Load in dependency order -->
 	<script src="assets/js/linkPreview.js"></script>
@@ -205,6 +279,20 @@
 	<script src="assets/js/simulationEngine.js"></script>
 	<script src="assets/js/simulator.js"></script>
 	<script src="script.js"></script>
+	
+	<!-- Service Worker -->
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function() {
+				navigator.serviceWorker.register('/sw.js')
+					.then(function(registration) {
+						console.log('ServiceWorker registration successful with scope: ', registration.scope);
+					}, function(err) {
+						console.log('ServiceWorker registration failed: ', err);
+					});
+			});
+		}
+	</script>
 </body>
 
 </html>

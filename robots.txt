@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jaws.queuauu.com/sitemap.xml
+
+# Archivos que no queremos indexar
+Disallow: /test-*.json
+Disallow: /assets/js/
+Disallow: /*.json$
+
+# Permitir acceso a CSS e imágenes
+Allow: /assets/css/
+Allow: /assets/img/
+Allow: /styles.css
+Allow: /docs/
+
+# Crawl delay (opcional)
+Crawl-delay: 1

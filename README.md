@@ -1,12 +1,8 @@
-# WAFake - Simulador de Chat
+# JAWS - Just another WhatsApp Simulator
 
-### 2. Configurar Mensajes
-- Cada mensaje tiene:
-  - **Autor**: Selecciona cuál de los 2 participantes envía el mensaje
-  - **Texto**: El contenido del mensaje
-  - **Delay**: Tiempo en milisegundos antes de mostrar el mensaje
+**Simulador de chat de WhatsApp que permite crear conversaciones falsas con animaciones realistas y panel de control completo.**
 
-### 3. Gestión de Mensajesmulador de chat de WhatsApp que permite crear conversaciones falsas con animaciones realistas y panel de control completo.
+🌐 **URL**: [https://jaws.queuauu.com/](https://jaws.queuauu.com/)
 
 ## Características
 

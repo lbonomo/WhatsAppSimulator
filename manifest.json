@@ -1,0 +1,43 @@
+{
+  "name": "JAWS - Just another WhatsApp Simulator",
+  "short_name": "JAWS",
+  "description": "Simulador de WhatsApp para crear conversaciones falsas realistas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f0f0",
+  "theme_color": "#25d366",
+  "orientation": "portrait-primary",
+  "categories": ["entertainment", "utilities"],
+  "lang": "es",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "docs/wa-example.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "docs/wa-example.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Interfaz principal del simulador"
+    },
+    {
+      "src": "docs/voice-received.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Vista de mensajes de voz"
+    }
+  ]
+}

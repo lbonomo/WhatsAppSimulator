@@ -5,13 +5,13 @@
 let simulator;
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        console.log('Iniciando WAFakeSimulator...');
-        simulator = new WAFakeSimulator();
+        console.log('Iniciando JAWSSimulator...');
+        simulator = new JAWSSimulator();
         // Exponer funciones globalmente para uso en HTML
         window.simulator = simulator;
-        console.log('WAFakeSimulator inicializado correctamente');
+        console.log('JAWSSimulator inicializado correctamente');
     } catch (error) {
-        console.error('Error al inicializar WAFakeSimulator:', error);
+        console.error('Error al inicializar JAWSSimulator:', error);
         console.error('Stack trace:', error.stack);
     }
 });
