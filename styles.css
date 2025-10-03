@@ -132,11 +132,22 @@ body {
 	.config-controls {
 		flex-direction: column;
 	}
-	
+
 	.config-controls .btn {
 		width: 100%;
 		margin-bottom: 5px;
 	}
+}
+
+
+.form-row {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+}
+
+.form-row .form-group {
+	width: 100%;
 }
 
 .message-config {
@@ -445,12 +456,15 @@ body {
 /* Mensajes */
 .message {
 	display: flex;
-	margin-bottom: 8px;
+	margin-bottom: 7px;
 	align-items: flex-end;
 	opacity: 0;
 	transform: translateY(20px);
 	animation: messageAppear 0.3s ease forwards;
 	clear: both;
+	width: 100%;
+	max-width: 500px;
+	padding: 0 7px;
 }
 
 @keyframes messageAppear {
@@ -469,23 +483,75 @@ body {
 }
 
 .message-bubble {
-	max-width: 65%;
-	padding: 8px 12px;
-	border-radius: 7.5px;
+	/* Posición relativa para que el "pico" se posicione en base a la burbuja */
 	position: relative;
-	box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+	color: #111b21;
+	padding: 8px 12px;
+	border-radius: 10px;
+	width: fit-content;
+	/* El ancho se ajusta al contenido */
+	max-width: 80%;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 	margin: 2px 0;
+	word-wrap: break-word;
 }
 
+/* Mensajes enviados (derecha) */
 .message.sent .message-bubble {
-	background: #dcf8c6;
-	border-bottom-right-radius: 2px;
+	background-color: #dcf8c6;
+	border-top-right-radius: 0;
+	/* Esto une el "pico" con la burbuja */
 	margin-left: auto;
 }
 
+/* Pico para mensajes enviados */
+.message.sent .message-bubble::before {
+	content: '';
+	/* Es necesario para que el pseudo-elemento se muestre */
+	position: absolute;
+
+	/* Posicionamiento del pico */
+	top: 0;
+	/* Se alinea con la parte superior de la burbuja */
+	right: -8px;
+	/* Lo movemos 8px fuera de la burbuja, hacia la derecha */
+
+	/* Creación de la forma de triángulo (el "pico") */
+	width: 0;
+	height: 0;
+	border-top: 0px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #dcf8c6;
+	/* Este borde es el que forma el triángulo visible */
+}
+
+/* Mensajes recibidos (izquierda) */
 .message.received .message-bubble {
-	background: white;
-	border-bottom-left-radius: 2px;
+	background-color: #ffffff;
+	border-top-left-radius: 0;
+	/* Esto une el "pico" con la burbuja */
+}
+
+/* --- Aquí está la magia --- */
+/* Usamos el pseudo-elemento ::before para crear el "pico" */
+.message.received .message-bubble::before {
+	content: '';
+	/* Es necesario para que el pseudo-elemento se muestre */
+	position: absolute;
+
+	/* Posicionamiento del pico */
+	top: 0;
+	/* Se alinea con la parte superior de la burbuja */
+	left: -8px;
+	/* Lo movemos 8px fuera de la burbuja, hacia la izquierda */
+
+	/* Creación de la forma de triángulo (el "pico") */
+	width: 0;
+	height: 0;
+	border-top: 0px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #ffffff;
+	/* Este borde es el que forma el triángulo visible */
 }
 
 .message-text {
@@ -509,6 +575,456 @@ body {
 
 .message.received .message-time {
 	color: rgba(0, 0, 0, 0.45);
+}
+
+/* Estilos específicos para mensajes de voz */
+/* Mensajes de voz - Estilo WhatsApp */
+.voice-message .message-bubble {
+	min-width: 320px;
+	max-width: 380px;
+	padding: 12px;
+	position: relative;
+}
+
+/* Contenedor principal del mensaje de voz */
+.audio-message {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	position: relative;
+}
+
+/* Contenedor del avatar con ícono de micrófono */
+.voice-avatar-container {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.voice-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #f0f0f0;
+}
+
+.voice-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Ícono de micrófono en esquina inferior derecha del avatar */
+.voice-mic-icon {
+	position: absolute;
+	bottom: -2px;
+	right: -2px;
+	width: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.voice-mic-icon img {
+	width: 22px;
+	height: 22px;
+}
+
+/* Contenido principal (botón + waveform) */
+.voice-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* Fila superior: botón play + waveform */
+.voice-content>.audio-play-pause {
+	align-self: flex-start;
+}
+
+.audio-waveform-container {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 1;
+}
+
+/* Contenedor del waveform */
+.audio-waveform {
+	display: flex;
+	align-items: center;
+	flex: 1;
+}
+
+/* Reorganizar el layout para que sea horizontal */
+.audio-message {
+	display: flex;
+	align-items: start;
+	gap: 12px;
+	flex-direction: row;
+}
+
+.message.received .audio-message {
+	flex-direction: row-reverse;
+}
+
+.voice-content {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 12px;
+}
+
+/* Botón de play/pause */
+.audio-play-pause {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.audio-play-pause:hover {
+	transform: scale(1.05);
+}
+
+.audio-play-pause .play-icon,
+.audio-play-pause .pause-icon {
+	width: 28px;
+	height: 28px;
+	filter: brightness(0) saturate(100%) invert(67%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(67%) contrast(1); /* Color #aaaaaa */
+	display: block;
+}
+
+.audio-play-pause .pause-icon {
+	display: none;
+}
+
+/* Contenedor de waveform reorganizado */
+.audio-waveform-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.audio-waveform {
+	width: 100%;
+}
+
+/* SVG de forma de onda */
+.audio-waveform svg {
+	width: 100%;
+	height: 24px;
+	cursor: pointer;
+}
+
+.audio-waveform svg rect {
+	fill: #aaaaaabb;
+	transition: fill 0.2s ease;
+}
+
+.audio-waveform svg rect.played {
+	fill: #6e6e6ebb;
+}
+
+/* Cursor de progreso animado */
+.audio-cursor {
+	fill: #0b77f3bb;
+	transition: cx 0.05s linear;
+}
+
+/* Información debajo del waveform */
+.audio-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 2px;
+	flex-direction: row;
+	padding: 0;
+	margin: 0;
+}
+
+.audio-duration {
+	font-size: 12px;
+	color: #8e8e93;
+	font-weight: 400;
+}
+
+.audio-time-status {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 11px;
+	color: #8e8e93;
+}
+
+/* Estilos específicos para mensajes enviados */
+.message.sent .audio-waveform svg rect {
+	fill: #aaaaaaa8;
+}
+
+.message.sent .audio-waveform svg rect.played {
+	fill: #5f5f5fa8;
+}
+
+.message.sent .audio-cursor {
+	fill: #0e75f5;
+	filter: drop-shadow(0 0 3px rgba(37, 211, 102, 0.5));
+}
+
+.message.sent .audio-duration,
+.message.sent .audio-time-status {
+	color: #4a4a4a;
+}
+
+.message.sent .message-status {
+	color: #4fc3f7;
+	letter-spacing: -9px;
+	font-size: 15px;
+}
+
+/* Sobrescribir picos para mensajes de voz enviados */
+.message.sent.voice-message .message-bubble::before {
+	border-left-color: #dcf8c6;
+	/* Mantener el color verde para mensajes enviados */
+}
+
+/* Sobrescribir picos para mensajes de voz recibidos */
+.message.received.voice-message .message-bubble::before {
+	border-right-color: #ffffff;
+	/* Mantener el color blanco para mensajes recibidos */
+}
+
+/* Estados de reproducción */
+.voice-message.playing .audio-play-pause {
+	animation: pulse 1.5s ease-in-out infinite;
+}
+
+.voice-placeholder {
+	text-align: center;
+	color: #999;
+	font-size: 12px;
+	margin-top: 8px;
+	padding: 4px;
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+@keyframes pulse {
+
+	0%,
+	100% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.05);
+	}
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.voice-message .message-bubble {
+		min-width: 280px;
+		max-width: 320px;
+	}
+}
+
+/* Estilos para configuración de mensajes de voz */
+.voice-config-content {
+	padding: 15px;
+}
+
+.audio-upload-area {
+	border: 2px dashed #ccc;
+	border-radius: 8px;
+	padding: 20px;
+	text-align: center;
+	background: white;
+	transition: all 0.3s ease;
+}
+
+.audio-upload-area.drag-over {
+	border-color: #25d366;
+	background: #f0f9f0;
+}
+
+.audio-upload-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.upload-icon {
+	font-size: 48px;
+	color: #25d366;
+}
+
+.upload-text {
+	color: #666;
+	line-height: 1.4;
+}
+
+.select-audio-btn {
+	background: none;
+	border: none;
+	color: #25d366;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.upload-formats {
+	font-size: 12px;
+	color: #999;
+}
+
+.audio-loaded {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.audio-filename {
+	font-weight: 500;
+	color: #333;
+}
+
+.audio-duration {
+	color: #666;
+	font-size: 12px;
+}
+
+.change-audio-btn,
+.remove-audio-btn {
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: white;
+	cursor: pointer;
+	margin: 0 5px;
+}
+
+.change-audio-btn:hover {
+	background: #25d366;
+	color: white;
+}
+
+.remove-audio-btn:hover {
+	background: #dc3545;
+	color: white;
+}
+
+.audio-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	color: #25d366;
+}
+
+.loading-spinner {
+	width: 24px;
+	height: 24px;
+	border: 3px solid #f3f3f3;
+	border-top: 3px solid #25d366;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.audio-preview {
+	margin-top: 15px;
+	padding: 10px;
+	background: #f8f9fa;
+	border-radius: 8px;
+	border: 1px solid #e9ecef;
+}
+
+.preview-header {
+	font-weight: 500;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.voice-message-preview {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.preview-play-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
+	background: #25d366;
+	color: white;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.preview-waveform {
+	flex: 1;
+	height: 24px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.preview-progress-bar {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	background: linear-gradient(90deg,
+			rgba(255, 255, 255, 0.3) 0%,
+			rgba(255, 255, 255, 0.1) 50%,
+			rgba(255, 255, 255, 0.3) 100%);
+}
+
+.preview-progress {
+	height: 100%;
+	background: #25d366;
+	border-radius: 12px;
+	transition: width 0.1s ease;
+}
+
+.preview-duration {
+	font-size: 11px;
+	color: #666;
+	min-width: 30px;
+	text-align: right;
+}
+
+.message-controls {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.message-controls .btn {
+	flex: 1;
+	min-width: 140px;
 }
 
 /* Previsualizaciones de enlaces */
@@ -641,8 +1157,13 @@ body {
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* Indicador de escribiendo */
@@ -796,6 +1317,266 @@ body {
 		aspect-ratio: 9 / 16;
 		margin: 0 auto;
 	}
+}
+
+.voice-config-content {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding-top: 10px; /* Espacio para el botón X */
+}
+
+/* Fila para autor y retraso en la misma línea */
+.voice-author-delay-row {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+
+.voice-author-delay-row > div {
+	flex: 1;
+}
+
+.voice-author-delay-row label {
+	display: block;
+	margin-bottom: 5px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #333;
+}
+
+.voice-author-delay-row select,
+.voice-author-delay-row input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+/* Fila para botones de cambiar y eliminar audio */
+.voice-audio-actions {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-top: 10px;
+}
+
+/* Estilos para carga de audio */
+.audio-upload-area {
+	border: 2px dashed #ddd;
+	border-radius: 8px;
+	padding: 20px;
+	text-align: center;
+	transition: all 0.3s ease;
+	background: #fafafa;
+}
+
+.audio-upload-area.drag-over {
+	border-color: #25d366;
+	background: #f0fdf4;
+}
+
+.audio-upload-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.upload-icon {
+	font-size: 48px;
+	opacity: 0.6;
+}
+
+.upload-text {
+	color: #666;
+	line-height: 1.4;
+}
+
+.select-audio-btn {
+	background: #25d366;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.select-audio-btn:hover {
+	background: #128c7e;
+}
+
+.upload-formats {
+	font-size: 12px;
+	color: #999;
+	margin-top: 5px;
+}
+
+.audio-loaded {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 10px;
+}
+
+.audio-filename {
+	font-weight: 500;
+	color: #333;
+}
+
+.audio-loaded  .audio-controls {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.audio-duration {
+	font-size: 12px;
+	color: #666;
+}
+
+.change-audio-btn,
+.remove-audio-btn {
+	padding: 6px 12px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+.change-audio-btn {
+	background: #25d366;
+	color: white;
+}
+
+.change-audio-btn:hover {
+	background: #1fa851;
+}
+
+.remove-audio-btn {
+	background: #ff4444;
+	color: white;
+}
+
+.remove-audio-btn:hover {
+	background: #cc0000;
+}
+
+.audio-loading {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: #666;
+}
+
+.loading-spinner {
+	width: 20px;
+	height: 20px;
+	border: 2px solid #ddd;
+	border-top: 2px solid #25d366;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Vista previa de audio */
+.audio-preview {
+	margin-top: 15px;
+	padding: 10px;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.preview-header {
+	font-weight: 500;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.voice-message-preview {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px;
+	background: #f8f9fa;
+	border-radius: 4px;
+}
+
+.preview-play-btn {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
+	background: #25d366;
+	color: white;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.preview-play-btn:hover {
+	background: #128c7e;
+}
+
+.preview-progress-container {
+	flex: 1;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	margin: 0 8px;
+}
+
+.preview-progress-bar {
+	width: 100%;
+	height: 6px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 3px;
+	overflow: hidden;
+	position: relative;
+}
+
+.preview-progress {
+	height: 100%;
+	background: #25d366;
+	border-radius: 3px;
+	transition: width 0.1s ease;
+	width: 0%;
+}
+
+.preview-duration {
+	font-size: 11px;
+	color: #666;
+	min-width: 30px;
+	text-align: right;
+}
+
+/* Controles de mensajes */
+.message-controls {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.message-controls .btn {
+	flex: 1;
+	min-width: 140px;
 }
 
 /* Scrollbar personalizado */
