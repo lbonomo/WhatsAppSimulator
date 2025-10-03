@@ -4,7 +4,14 @@
 // Inicializar el simulador cuando se carga la página
 let simulator;
 document.addEventListener('DOMContentLoaded', () => {
-    simulator = new WAFakeSimulator();
-    // Exponer funciones globalmente para uso en HTML
-    window.simulator = simulator;
+    try {
+        console.log('Iniciando WAFakeSimulator...');
+        simulator = new WAFakeSimulator();
+        // Exponer funciones globalmente para uso en HTML
+        window.simulator = simulator;
+        console.log('WAFakeSimulator inicializado correctamente');
+    } catch (error) {
+        console.error('Error al inicializar WAFakeSimulator:', error);
+        console.error('Stack trace:', error.stack);
+    }
 });

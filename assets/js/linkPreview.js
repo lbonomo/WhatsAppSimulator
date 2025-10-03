@@ -1,6 +1,7 @@
 class LinkPreviewManager {
     constructor() {
         this.linkCache = new Map(); // Cache para evitar múltiples requests
+        this.imageCache = new Map(); // Cache específico para imágenes de OG
     }
 
     // Detectar URLs en el texto
@@ -8,6 +9,16 @@ class LinkPreviewManager {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const urls = text.match(urlRegex);
         return urls ? urls[0] : null; // Retorna la primera URL encontrada
+    }
+
+    // Obtener datos de OG desde cache si está disponible
+    getCachedOGData(url) {
+        return this.linkCache.get(url);
+    }
+
+    // Verificar si una imagen de OG está en cache
+    getCachedOGImage(url) {
+        return this.imageCache.get(url);
     }
 
     // Obtener metadatos Open Graph de una URL usando múltiples proxies
@@ -71,6 +82,12 @@ class LinkPreviewManager {
                         
                         // Guardar en cache
                         this.linkCache.set(url, data);
+                        
+                        // Si hay imagen, también guardarla en el cache de imágenes
+                        if (data.image) {
+                            this.imageCache.set(url, data.image);
+                        }
+                        
                         return data;
                     }
                 }

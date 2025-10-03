@@ -85,7 +85,7 @@ class SimulationEngine {
             }); // Debug
             
             // Mensaje de voz
-            const messageElement = this.uiController.createMessageElement(message, timeString);
+            const messageElement = await this.uiController.createMessageElement(message, timeString, this.messageManager);
             this.uiController.appendMessage(messageElement);
             
             // Reproducir automáticamente el mensaje de voz después de un breve delay
@@ -100,7 +100,7 @@ class SimulationEngine {
             
             if (url) {
                 // Crear mensaje con indicador de carga integrado
-                const messageElement = this.uiController.createMessageElement(message, timeString);
+                const messageElement = await this.uiController.createMessageElement(message, timeString, this.messageManager);
                 
                 // Agregar indicador de carga dentro del message-bubble
                 const messageBubble = messageElement.querySelector('.message-bubble');
@@ -117,7 +117,7 @@ class SimulationEngine {
                 this.uiController.updateMessagePreview(messageElement, ogData, url);
             } else {
                 // Mensaje sin URL - crear normalmente
-                const messageElement = this.uiController.createMessageElement(message, timeString);
+                const messageElement = await this.uiController.createMessageElement(message, timeString, this.messageManager);
                 this.uiController.appendMessage(messageElement);
             }
         }

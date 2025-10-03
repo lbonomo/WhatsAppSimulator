@@ -6,37 +6,54 @@ class UIController {
 
     // Configurar los event listeners
     setupEventListeners(simulator) {
+        // Helper function to safely add event listeners
+        const safeAddEventListener = (id, event, callback) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener(event, callback);
+            } else {
+                console.warn(`Element with ID '${id}' not found`);
+            }
+        };
+
         // Input de contacto
-        document.getElementById('participant2-name').addEventListener('input', (e) => {
+        safeAddEventListener('participant2-name', 'input', (e) => {
             this.participants[2].name = e.target.value;
             this.updateChatHeader();
             simulator.renderMessages();
         });
         
-        document.getElementById('participant2-avatar').addEventListener('input', (e) => {
+        safeAddEventListener('participant2-avatar', 'input', (e) => {
             this.participants[2].avatar = e.target.value || 'assets/img/avatar-default.svg';
             this.updateChatHeader();
             simulator.renderMessages();
         });
 
         // Botones de control
-        document.getElementById('add-message').addEventListener('click', () => simulator.addMessage());
-        document.getElementById('add-voice-message').addEventListener('click', () => simulator.addVoiceMessage());
-        document.getElementById('start-simulation').addEventListener('click', () => simulator.startSimulation());
-        document.getElementById('stop-simulation').addEventListener('click', () => simulator.stopSimulation());
-        document.getElementById('reset-simulation').addEventListener('click', () => simulator.resetSimulation());
+        safeAddEventListener('add-message', 'click', () => simulator.addMessage());
+        safeAddEventListener('add-voice-message', 'click', () => simulator.addVoiceMessage());
+        safeAddEventListener('start-simulation', 'click', () => simulator.startSimulation());
+        safeAddEventListener('stop-simulation', 'click', () => simulator.stopSimulation());
+        safeAddEventListener('reset-simulation', 'click', () => simulator.resetSimulation());
         
         // Botones de configuración
-        document.getElementById('save-config').addEventListener('click', () => simulator.saveConfig());
-        document.getElementById('load-config').addEventListener('click', () => simulator.loadConfig());
-        document.getElementById('download-sample').addEventListener('click', () => simulator.downloadSampleConfig());
+        safeAddEventListener('save-config', 'click', () => simulator.saveConfig());
+        safeAddEventListener('load-config', 'click', () => simulator.loadConfig());
+        safeAddEventListener('download-sample', 'click', () => simulator.downloadSampleConfig());
     }
 
     // Actualizar el header del chat
     updateChatHeader() {
         const participant = this.participants[2];
-        document.getElementById('chat-contact-name').textContent = participant.name;
-        document.getElementById('chat-contact-avatar').src = participant.avatar;
+        const nameElement = document.getElementById('chat-contact-name');
+        const avatarElement = document.getElementById('chat-contact-avatar');
+        
+        if (nameElement) {
+            nameElement.textContent = participant.name;
+        }
+        if (avatarElement) {
+            avatarElement.src = participant.avatar;
+        }
     }
 
     // Limpiar el chat
@@ -81,18 +98,27 @@ class UIController {
     }
 
     // Crear elemento de mensaje
-    createMessageElement(message, timeString) {
+    async createMessageElement(message, timeString, messageManager = null) {
         console.log('Creando mensaje:', message); // Debug
         
         if (message.type === 'voice') {
-            return this.createVoiceMessageElement(message, timeString);
+            return await this.createVoiceMessageElement(message, timeString, messageManager);
         }
         
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${message.author === 1 ? 'sent' : 'received'}`;
         
+        let replyHTML = '';
+        if (message.replyToId && messageManager) {
+            const replyToMessage = messageManager.getMessage(message.replyToId);
+            if (replyToMessage) {
+                replyHTML = await this.createReplyHTML(replyToMessage, message.author);
+            }
+        }
+        
         messageDiv.innerHTML = `
             <div class="message-bubble">
+                ${replyHTML}
                 <p class="message-text">${message.text}</p>
                 <div class="message-time">${timeString}</div>
             </div>
@@ -102,7 +128,7 @@ class UIController {
     }
 
     // Crear elemento de mensaje de voz
-    createVoiceMessageElement(message, timeString) {
+    async createVoiceMessageElement(message, timeString, messageManager = null) {
         console.log('Creando mensaje de voz:', message); // Debug
         
         const messageDiv = document.createElement('div');
@@ -119,8 +145,17 @@ class UIController {
         const waveformData = this.generateWaveform(message.id || 0, 42);
         const svgWidth = waveformData.totalWidth;
         
+        let replyHTML = '';
+        if (message.replyToId && messageManager) {
+            const replyToMessage = messageManager.getMessage(message.replyToId);
+            if (replyToMessage) {
+                replyHTML = await this.createReplyHTML(replyToMessage, message.author);
+            }
+        }
+        
         messageDiv.innerHTML = `
             <div class="message-bubble">
+                ${replyHTML}
                 <div class="audio-message">
                     <!-- Avatar con ícono de micrófono -->
                     <div class="voice-avatar-container">
@@ -171,6 +206,116 @@ class UIController {
         }
         
         return messageDiv;
+    }
+
+    // Obtener imagen de OG rápidamente para respuestas (usa cache cuando esté disponible)
+    async getOGImageForReply(url) {
+        // Primero verificar el cache de imágenes
+        const cachedImage = this.linkPreviewManager.getCachedOGImage(url);
+        if (cachedImage) {
+            return cachedImage;
+        }
+        
+        // Verificar el cache de datos OG completos
+        const cachedData = this.linkPreviewManager.getCachedOGData(url);
+        if (cachedData && cachedData.image) {
+            return cachedData.image;
+        }
+        
+        // Si no está en cache, obtener los datos (esto guardará en cache para futuros usos)
+        try {
+            const ogData = await this.linkPreviewManager.getOpenGraphData(url);
+            return ogData && ogData.image ? ogData.image : null;
+        } catch (error) {
+            console.log('Error getting OG image for reply:', error);
+            return null;
+        }
+    }
+
+    // Crear HTML para respuestas
+    async createReplyHTML(replyToMessage, currentAuthor) {
+        const borderColor = currentAuthor === 1 ? '#5c46d6' : '#00a763';
+        const authorName = replyToMessage.author === 1 ? 'Tú' : this.participants[2].name;
+        
+        let replyContent = '';
+        let hasLink = false;
+        let linkThumbnail = '';
+        
+        if (replyToMessage.type === 'voice') {
+            replyContent = '🎤 Mensaje de voz';
+        } else {
+            replyContent = replyToMessage.text || 'Mensaje vacío';
+            
+            // Detectar si tiene enlace
+            if (this.linkPreviewManager) {
+                const url = this.linkPreviewManager.extractUrl(replyContent);
+                if (url) {
+                    hasLink = true;
+                    // Para enlaces, mostrar el texto completo pero truncado si es muy largo
+                    if (replyContent.length > 100) {
+                        replyContent = replyContent.substring(0, 97) + '...';
+                    }
+                    
+                    // Obtener imagen de OG para el thumbnail
+                    try {
+                        const ogImage = await this.getOGImageForReply(url);
+                        if (ogImage) {
+                            // Crear thumbnail con la imagen de og:image
+                            linkThumbnail = `
+                                <div class="reply-thumbnail">
+                                    <img src="${ogImage}" alt="Link preview" 
+                                         style="width: 100%; height: 100%; object-fit: cover;"
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'width: 100%; height: 100%; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #999;\\'>🔗</div>';">
+                                </div>
+                            `;
+                        } else {
+                            // Fallback al ícono de enlace
+                            linkThumbnail = `
+                                <div class="reply-thumbnail">
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #999;">
+                                        🔗
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } catch (error) {
+                        console.log('Error getting OG image for reply thumbnail:', error);
+                        // Fallback al ícono de enlace
+                        linkThumbnail = `
+                            <div class="reply-thumbnail">
+                                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #999;">
+                                    🔗
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            // Truncar texto largo para respuestas sin enlaces
+            if (!hasLink && replyContent.length > 80) {
+                replyContent = replyContent.substring(0, 77) + '...';
+            }
+        }
+        
+        if (hasLink) {
+            return `
+                <div class="message-reply has-link" style="border-left: 3px solid ${borderColor};">
+                    <div class="reply-text">
+                        <div class="reply-author">${authorName}</div>
+                        <div class="reply-content">${replyContent}</div>
+                    </div>
+                    ${linkThumbnail}
+                </div>
+            `;
+        } else {
+            return `
+                <div class="message-reply" style="border-left: 3px solid ${borderColor};">
+                    <div class="reply-author">${authorName}</div>
+                    <div class="reply-content">${replyContent}</div>
+                </div>
+            `;
+        }
     }
 
     // Generar forma de onda SVG

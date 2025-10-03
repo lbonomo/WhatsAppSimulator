@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug WAFake</title>
+</head>
+<body>
+    <h1>Debug WAFake Simulator</h1>
+    <button id="test-add-message" onclick="testAddMessage()">Test Agregar Mensaje</button>
+    <div id="debug-output"></div>
+
+    <script>
+        function log(message) {
+            console.log(message);
+            document.getElementById('debug-output').innerHTML += message + '<br>';
+        }
+
+        function testAddMessage() {
+            try {
+                log('Testing addMessage...');
+                if (window.simulator) {
+                    window.simulator.addMessage();
+                    log('addMessage called successfully');
+                } else {
+                    log('ERROR: simulator not found in window');
+                }
+            } catch (error) {
+                log('ERROR in testAddMessage: ' + error.message);
+            }
+        }
+    </script>
+
+    <!-- Load all modules -->
+    <script src="assets/js/linkPreview.js"></script>
+    <script>log('linkPreview.js loaded');</script>
+    
+    <script src="assets/js/messageManager.js"></script>
+    <script>log('messageManager.js loaded');</script>
+    
+    <script src="assets/js/voiceMessageManager.js"></script>
+    <script>log('voiceMessageManager.js loaded');</script>
+    
+    <script src="assets/js/configManager.js"></script>
+    <script>log('configManager.js loaded');</script>
+    
+    <script src="assets/js/uiController.js"></script>
+    <script>log('uiController.js loaded');</script>
+    
+    <script src="assets/js/simulationEngine.js"></script>
+    <script>log('simulationEngine.js loaded');</script>
+    
+    <script src="assets/js/simulator.js"></script>
+    <script>log('simulator.js loaded');</script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                log('DOMContentLoaded - Creating simulator...');
+                window.simulator = new WAFakeSimulator();
+                log('Simulator created successfully');
+            } catch (error) {
+                log('ERROR creating simulator: ' + error.message);
+                log('Stack: ' + error.stack);
+            }
+        });
+    </script>
+</body>
+</html>
