@@ -12,8 +12,17 @@ class ConfigManager {
                 1: { ...this.simulator.participants[1] },
                 2: { ...this.simulator.participants[2] }
             },
-            messages: this.simulator.messageManager.getMessages().map(msg => ({ ...msg }))
+            messages: this.simulator.messageManager.getMessages().map(msg => ({ ...msg })),
+            chatConfig: this.simulator.chatConfigManager ? this.simulator.chatConfigManager.getConfig() : null
         };
+        
+        // Log para debugging
+        console.log('🔄 Exportando configuración con avatares:', {
+            chatConfig: config.chatConfig,
+            localAvatar: config.chatConfig?.localAvatar ? 'Configurado' : 'No configurado',
+            contactAvatar: config.chatConfig?.contactAvatar ? 'Configurado' : 'No configurado'
+        });
+        
         return config;
     }
 
@@ -81,6 +90,20 @@ class ConfigManager {
             // Actualizar mensajes
             this.simulator.messageManager.messages = config.messages.map(msg => ({ ...msg }));
 
+            // Restaurar configuración de chat (avatares, fuente, etc.)
+            if (config.chatConfig && this.simulator.chatConfigManager) {
+                console.log('🔄 Importando configuración de chat:', {
+                    fontSize: config.chatConfig.fontSize,
+                    localAvatar: config.chatConfig.localAvatar ? 'Configurado' : 'No configurado',
+                    contactAvatar: config.chatConfig.contactAvatar ? 'Configurado' : 'No configurado'
+                });
+                
+                // Guardar la configuración del chat
+                this.simulator.chatConfigManager.config = { ...this.simulator.chatConfigManager.config, ...config.chatConfig };
+                this.simulator.chatConfigManager.saveConfig();
+                this.simulator.chatConfigManager.applyConfig();
+            }
+
             // Actualizar UI
             this.updateUIFromConfig();
 
@@ -128,18 +151,8 @@ class ConfigManager {
     updateUIFromConfig() {
         // Actualizar inputs de participantes
         const nameInput = document.getElementById('participant2-name');
-        const avatarInput = document.getElementById('participant2-avatar');
         
         if (nameInput) nameInput.value = this.simulator.participants[2].name;
-        if (avatarInput) {
-            // Solo mostrar la URL si no es el avatar por defecto
-            const avatarUrl = this.simulator.participants[2].avatar;
-            if (avatarUrl && !avatarUrl.includes('avatar-default.svg')) {
-                avatarInput.value = avatarUrl;
-            } else {
-                avatarInput.value = '';
-            }
-        }
 
         // Actualizar header del chat
         this.simulator.uiController.updateChatHeader();
@@ -205,7 +218,12 @@ class ConfigManager {
                     text: '¡Hola! Muy bien, gracias. ¿Y tú?',
                     delay: 2000
                 }
-            ]
+            ],
+            chatConfig: {
+                fontSize: 14,
+                localAvatar: null,
+                contactAvatar: null
+            }
         };
     }
 

@@ -244,15 +244,23 @@ class MessageManager {
                 <span class="message-number">📝 Mensaje #${message.id}</span>
                 <button class="delete-message" onclick="simulator.deleteMessage(${message.id})">×</button>
             </div>
-            
-            <div class="form-group">
-                <label>Autor:</label>
-                <select onchange="simulator.updateMessage(${message.id}, 'author', this.value)">
-                    <option value="1" ${message.author === 1 ? 'selected' : ''}>Local (Derecha)</option>
-                    <option value="2" ${message.author === 2 ? 'selected' : ''}>Contacto (Izquierda)</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Autor:</label>
+                    <select onchange="simulator.updateMessage(${message.id}, 'author', this.value)">
+                        <option value="1" ${message.author === 1 ? 'selected' : ''}>Local (Derecha)</option>
+                        <option value="2" ${message.author === 2 ? 'selected' : ''}>Contacto (Izquierda)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Retraso:</label>
+                    <div class="delay-control">
+                        <input type="range" id="delay-slider-${message.id}" min="100" max="10000" value="${message.delay}" step="100"
+                            onchange="simulator.updateMessage(${message.id}, 'delay', parseInt(this.value)); document.getElementById('delay-value-${message.id}').textContent = this.value + 'ms'">
+                        <span class="delay-value" id="delay-value-${message.id}">${message.delay}ms</span>
+                    </div>
+                </div>
             </div>
-            
             <div class="form-group">
                 <label>Responder a:</label>
                 <select onchange="simulator.updateMessage(${message.id}, 'replyToId', this.value === '' ? null : this.value)">
@@ -266,11 +274,7 @@ class MessageManager {
                          onchange="simulator.updateMessage(${message.id}, 'text', this.value)">${message.text}</textarea>
             </div>
             
-            <div class="form-group">
-                <label>Retraso (ms):</label>
-                <input type="number" value="${message.delay}" min="100" step="100"
-                       onchange="simulator.updateMessage(${message.id}, 'delay', parseInt(this.value))">
-            </div>
+
         `;
         return messageDiv;
     }

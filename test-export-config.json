@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-10-03T11:16:00.000Z",
+  "participants": {
+    "1": {
+      "name": "Usuario Local",
+      "avatar": "assets/img/avatar-local.svg"
+    },
+    "2": {
+      "name": "Contacto Prueba",
+      "avatar": "assets/img/avatar-remoto.svg"
+    }
+  },
+  "messages": [
+    {
+      "id": 1,
+      "text": "Hola, esto es una prueba",
+      "participant": 1,
+      "timestamp": "2025-10-03T11:15:00.000Z"
+    }
+  ],
+  "chatConfig": {
+    "fontSize": 16,
+    "localAvatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+    "contactAvatar": "https://example.com/test-avatar.jpg"
+  }
+}

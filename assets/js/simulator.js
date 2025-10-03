@@ -1,8 +1,14 @@
 class WAFakeSimulator {
     constructor() {
+        // Inicializar configuración de chat primero
+        this.chatConfigManager = new ChatConfigManager();
+        
+        // Obtener avatares de la configuración
+        const avatars = this.chatConfigManager.getAvatars();
+        
         this.participants = {
-            1: { name: 'Tú', avatar: 'assets/img/avatar-default.svg' },
-            2: { name: 'Contacto', avatar: 'assets/img/avatar-default.svg' }
+            1: { name: 'Tú', avatar: avatars.local },
+            2: { name: 'Contacto', avatar: avatars.contact }
         };
         
         // Inicializar módulos
@@ -25,6 +31,47 @@ class WAFakeSimulator {
         this.messageManager.addDefaultMessages();
         this.uiController.updateChatHeader();
         this.renderMessageConfigs();
+        
+        // Configurar listener para cambios en avatares
+        this.setupAvatarListeners();
+    }
+
+    // Configurar listeners para cambios de avatar
+    setupAvatarListeners() {
+        // Cuando se cambie el avatar del contacto, actualizar participantes y UI
+        const originalApplyContactAvatar = this.chatConfigManager.applyContactAvatar.bind(this.chatConfigManager);
+        this.chatConfigManager.applyContactAvatar = (dataUrl) => {
+            originalApplyContactAvatar(dataUrl);
+            this.participants[2].avatar = dataUrl;
+            this.uiController.updateChatHeader();
+            // Actualizar mensajes existentes del contacto
+            this.updateExistingContactMessages(dataUrl);
+        };
+
+        // Cuando se cambie el avatar local, actualizar participantes
+        const originalApplyLocalAvatar = this.chatConfigManager.applyLocalAvatar.bind(this.chatConfigManager);
+        this.chatConfigManager.applyLocalAvatar = (dataUrl) => {
+            originalApplyLocalAvatar(dataUrl);
+            this.participants[1].avatar = dataUrl;
+            // Actualizar mensajes existentes del usuario local
+            this.updateExistingLocalMessages(dataUrl);
+        };
+    }
+
+    // Actualizar avatares en mensajes existentes del contacto
+    updateExistingContactMessages(avatarUrl) {
+        const contactMessages = document.querySelectorAll('.message.received .voice-avatar img');
+        contactMessages.forEach(img => {
+            img.src = avatarUrl;
+        });
+    }
+
+    // Actualizar avatares en mensajes existentes del usuario local
+    updateExistingLocalMessages(avatarUrl) {
+        const localMessages = document.querySelectorAll('.message.sent .voice-avatar img');
+        localMessages.forEach(img => {
+            img.src = avatarUrl;
+        });
     }
 
     // Métodos que actúan como bridge entre la UI y los módulos

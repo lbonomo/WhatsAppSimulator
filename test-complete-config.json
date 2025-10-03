@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-10-03T11:20:00.000Z",
+  "participants": {
+    "1": {
+      "name": "Usuario Local",
+      "avatar": "assets/img/avatar-local.svg"
+    },
+    "2": {
+      "name": "Contacto Completo",
+      "avatar": "assets/img/avatar-remoto.svg"
+    }
+  },
+  "messages": [
+    {
+      "id": 1,
+      "author": 2,
+      "text": "¡Hola! Probando avatares personalizados",
+      "delay": 1000
+    },
+    {
+      "id": 2,
+      "author": 1,
+      "text": "Perfecto, se ven muy bien",
+      "delay": 2000
+    },
+    {
+      "id": 3,
+      "author": 2,
+      "type": "voice",
+      "delay": 3000
+    }
+  ],
+  "chatConfig": {
+    "fontSize": 16,
+    "localAvatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0Qzc2NEYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iNiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTggMzJDOCAyNi40NzcyIDEyLjQ3NzIgMjIgMTggMjJIMjJDMjcuNTIyOCAyMiAzMiAyNi40NzcyIDMyIDMyVjM2SDhWMzJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+    "contactAvatar": "https://picsum.photos/200/200?random=1"
+  }
+}

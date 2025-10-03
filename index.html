@@ -18,14 +18,55 @@
 		<!-- Panel de Control -->
 		<div class="control-panel">
 			<h2>Panel de Control</h2>
+			
+			<!-- Configuración General -->
+			<div class="general-config-section">
+				<h3>⚙️ General</h3>
+				<div class="config-row">
+					<label for="font-size-slider">Tamaño de fuente del chat:</label>
+					<div class="font-size-control">
+						<input type="range" id="font-size-slider" min="12" max="20" value="14" step="1">
+						<span id="font-size-value">14px</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Configuración de Usuario Local -->
+			<div class="local-config-section">
+				<h3>👤 Usuario Local</h3>
+				<div class="config-row">
+					<label>Avatar:</label>
+					<div class="avatar-upload-control">
+						<div class="avatar-preview">
+							<img id="local-avatar-preview" src="" alt="Avatar local">
+						</div>
+						<div class="avatar-controls">
+							<input type="file" id="local-avatar-upload" accept="image/*" style="display: none;">
+							<button id="local-avatar-btn" class="btn btn-small">📁 Subir Imagen</button>
+							<button id="local-avatar-reset" class="btn btn-small btn-secondary">🗑️ Restaurar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 			<!-- Configuración de Participantes -->
 			<div class="participants-section">
-				<h3>Contacto</h3>
-				<div class="participants">
-					<div class="participant">
-						<label>Nombre del contacto:</label>
-						<input type="text" id="participant2-name" placeholder="Nombre">
-						<input type="url" id="participant2-avatar" placeholder="URL del avatar">
+				<h3>👥 Contacto</h3>
+				<div class="config-row">
+					<label>Nombre del contacto:</label>
+					<input type="text" id="participant2-name" placeholder="Nombre">
+				</div>
+				<div class="config-row">
+					<label>Avatar:</label>
+					<div class="avatar-upload-control">
+						<div class="avatar-preview">
+							<img id="contact-avatar-preview" src="" alt="Avatar contacto">
+						</div>
+						<div class="avatar-controls">
+							<input type="file" id="contact-avatar-upload" accept="image/*" style="display: none;">
+							<button id="contact-avatar-btn" class="btn btn-small">📁 Subir Imagen</button>
+							<button id="contact-avatar-reset" class="btn btn-small btn-secondary">🗑️ Restaurar</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -85,7 +126,7 @@
 						<div class="header-left">
 							<img class="back-button" width="32" height="32" src="assets/img/phone/arrow_back.svg" alt="Volver" />
 							<div class="chat-avatar">
-								<img id="chat-contact-avatar" src="assets/img/avatar-default.svg" alt="Avatar">
+								<img id="chat-contact-avatar" src="" alt="Avatar">
 							</div>
 							<div class="chat-info">
 								<h3 id="chat-contact-name">Chat</h3>
@@ -149,6 +190,7 @@
 	<script src="assets/js/messageManager.js"></script>
 	<script src="assets/js/voiceMessageManager.js"></script>
 	<script src="assets/js/configManager.js"></script>
+	<script src="assets/js/chatConfigManager.js"></script>
 	<script src="assets/js/uiController.js"></script>
 	<script src="assets/js/simulationEngine.js"></script>
 	<script src="assets/js/simulator.js"></script>
