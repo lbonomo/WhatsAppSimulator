@@ -128,6 +128,148 @@ body {
 	text-align: center;
 }
 
+/* Configuración General */
+.general-config-section,
+.local-config-section {
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.config-row {
+	margin-bottom: 15px;
+}
+
+.config-row label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: 500;
+	color: #333;
+}
+
+/* Control de tamaño de fuente */
+.font-size-control {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.font-size-control input[type="range"] {
+	flex: 1;
+	height: 6px;
+	background: #e0e0e0;
+	border-radius: 3px;
+	outline: none;
+	-webkit-appearance: none;
+}
+
+.font-size-control input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 18px;
+	height: 18px;
+	background: #25d366;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.font-size-control input[type="range"]::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	background: #25d366;
+	border-radius: 50%;
+	cursor: pointer;
+	border: none;
+}
+
+#font-size-value {
+	min-width: 40px;
+	font-weight: 500;
+	color: #25d366;
+}
+
+/* Control de delay */
+.delay-control {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.delay-control input[type="range"] {
+	flex: 1;
+	height: 6px;
+	background: #e0e0e0;
+	border-radius: 3px;
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+	padding: 0;
+}
+
+.delay-control input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 18px;
+	height: 18px;
+	background: #25d366;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.delay-control input[type="range"]::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	background: #25d366;
+	border-radius: 50%;
+	cursor: pointer;
+	border: none;
+}
+
+.delay-value {
+	min-width: 60px;
+	font-weight: 500;
+	font-size: 12px;
+}
+
+/* Control de avatar */
+.avatar-upload-control {
+	display: flex;
+	gap: 15px;
+	align-items: flex-start;
+}
+
+.avatar-preview {
+	flex-shrink: 0;
+}
+
+.avatar-preview img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid #e0e0e0;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-controls {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.avatar-controls .btn {
+	padding: 6px 12px;
+	font-size: 12px;
+	border-radius: 6px;
+}
+
+.btn-small {
+	padding: 6px 12px;
+	font-size: 12px;
+	border-radius: 6px;
+}
+
 @media (max-width: 768px) {
 	.config-controls {
 		flex-direction: column;
@@ -434,8 +576,13 @@ body {
 /* Chat Messages */
 .chat-messages {
 	flex: 1;
-	padding: 8px;
+	padding: 10px;
 	overflow-y: auto;
+	background-image: url('assets/img/background.png');
+	background-repeat: repeat;
+	display: flex;
+	flex-direction: column;
+	font-size: 14px; /* Default font size, will be overridden by ChatConfigManager */
 }
 
 /* Separador de fecha */
@@ -558,7 +705,7 @@ body {
 	margin: 0;
 	line-height: 1.4;
 	word-wrap: break-word;
-	font-size: 16px;
+	font-size: inherit; /* Inherit from parent for dynamic sizing */
 	color: #303030;
 	white-space: pre-wrap;
 	overflow-wrap: break-word;
@@ -1607,7 +1754,6 @@ body {
 	padding: 10px 12px;
 	margin-bottom: 8px;
 	border-left: 3px solid #00a763;
-	font-size: 14px;
 	line-height: 1.4;
 	cursor: pointer;
 	transition: background-color 0.2s ease;
@@ -1629,7 +1775,6 @@ body {
 .reply-author {
 	font-weight: 600;
 	margin-bottom: 4px;
-	font-size: 13px;
 }
 
 .message.sent .reply-author {
@@ -1639,7 +1784,6 @@ body {
 
 .reply-content {
 	color: #555;
-	font-size: 14px;
 	opacity: 0.9;
 }
 

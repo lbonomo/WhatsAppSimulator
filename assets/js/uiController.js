@@ -22,12 +22,6 @@ class UIController {
             this.updateChatHeader();
             simulator.renderMessages();
         });
-        
-        safeAddEventListener('participant2-avatar', 'input', (e) => {
-            this.participants[2].avatar = e.target.value || 'assets/img/avatar-default.svg';
-            this.updateChatHeader();
-            simulator.renderMessages();
-        });
 
         // Botones de control
         safeAddEventListener('add-message', 'click', () => simulator.addMessage());
@@ -153,6 +147,9 @@ class UIController {
             }
         }
         
+        // Obtener avatar del autor del mensaje
+        const authorAvatar = this.participants[message.author] ? this.participants[message.author].avatar : 'assets/img/avatar-default.svg';
+        
         messageDiv.innerHTML = `
             <div class="message-bubble">
                 ${replyHTML}
@@ -160,7 +157,7 @@ class UIController {
                     <!-- Avatar con ícono de micrófono -->
                     <div class="voice-avatar-container">
                         <div class="voice-avatar">
-                            <img src="assets/img/avatar-default.svg" alt="avatar">
+                            <img src="${authorAvatar}" alt="avatar">
                         </div>
                         <div class="voice-mic-icon">
                             <img src="assets/img/phone/micro-whats-received.svg" alt="mic">

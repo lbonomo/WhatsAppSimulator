@@ -45,9 +45,12 @@ class VoiceMessageManager {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Retraso (ms):</label>
-                        <input type="number" class="message-delay" data-id="${message.id}" 
-                            value="${message.delay}" min="0" step="100">
+                        <label>Retraso:</label>
+                        <div class="delay-control">
+                            <input type="range" class="message-delay-slider" data-id="${message.id}" 
+                                min="100" max="10000" value="${message.delay}" step="100">
+                            <span class="delay-value" id="delay-value-${message.id}">${message.delay}ms</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -153,9 +156,15 @@ class VoiceMessageManager {
         });
         
         // Cambio de delay
-        const delayInput = messageItem.querySelector('.message-delay');
-        delayInput.addEventListener('input', (e) => {
-            this.messageManager.updateMessage(messageId, 'delay', parseInt(e.target.value));
+        const delaySlider = messageItem.querySelector('.message-delay-slider');
+        delaySlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            this.messageManager.updateMessage(messageId, 'delay', value);
+            // Actualizar el texto del valor
+            const valueSpan = messageItem.querySelector('.delay-value');
+            if (valueSpan) {
+                valueSpan.textContent = value + 'ms';
+            }
         });
         
         // Cambio de respuesta
