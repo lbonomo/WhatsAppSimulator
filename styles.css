@@ -139,6 +139,17 @@ body {
 	}
 }
 
+
+.form-row {
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+}
+
+.form-row .form-group {
+	width: 100%;
+}
+
 .message-config {
 	background: #f8f8f8;
 	border: 1px solid #e0e0e0;
@@ -445,7 +456,7 @@ body {
 /* Mensajes */
 .message {
 	display: flex;
-	margin-bottom: 20px;
+	margin-bottom: 7px;
 	align-items: flex-end;
 	opacity: 0;
 	transform: translateY(20px);
@@ -453,7 +464,7 @@ body {
 	clear: both;
 	width: 100%;
 	max-width: 500px;
-	padding: 0 20px;
+	padding: 0 7px;
 }
 
 @keyframes messageAppear {
@@ -581,7 +592,6 @@ body {
 	align-items: flex-start;
 	gap: 12px;
 	position: relative;
-	min-height: 60px;
 }
 
 /* Contenedor del avatar con ícono de micrófono */
@@ -650,7 +660,7 @@ body {
 /* Reorganizar el layout para que sea horizontal */
 .audio-message {
 	display: flex;
-	align-items: center;
+	align-items: start;
 	gap: 12px;
 	flex-direction: row;
 }
@@ -717,19 +727,18 @@ body {
 }
 
 .audio-waveform svg rect {
-	fill: #aaaaaa;
+	fill: #aaaaaabb;
 	transition: fill 0.2s ease;
 }
 
 .audio-waveform svg rect.played {
-	fill: #52a6fe;
+	fill: #6e6e6ebb;
 }
 
 /* Cursor de progreso animado */
 .audio-cursor {
-	fill: #52a6fe;
+	fill: #0b77f3bb;
 	transition: cx 0.05s linear;
-	filter: drop-shadow(0 0 3px rgba(82, 166, 254, 0.5));
 }
 
 /* Información debajo del waveform */
@@ -759,15 +768,15 @@ body {
 
 /* Estilos específicos para mensajes enviados */
 .message.sent .audio-waveform svg rect {
-	fill: #aaaaaa;
+	fill: #aaaaaaa8;
 }
 
 .message.sent .audio-waveform svg rect.played {
-	fill: #25d366;
+	fill: #5f5f5fa8;
 }
 
 .message.sent .audio-cursor {
-	fill: #25d366;
+	fill: #0e75f5;
 	filter: drop-shadow(0 0 3px rgba(37, 211, 102, 0.5));
 }
 
@@ -830,11 +839,6 @@ body {
 }
 
 /* Estilos para configuración de mensajes de voz */
-.voice-message-config {
-	border: 2px solid #25d366;
-	background: #f0f9f0;
-}
-
 .voice-config-content {
 	padding: 15px;
 }
@@ -1315,16 +1319,47 @@ body {
 	}
 }
 
-/* Estilos específicos para configuración de mensajes de voz */
-.message-config.voice-message-config {
-	border-color: #25d366;
-	background: #f0fdf4;
-}
-
 .voice-config-content {
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
+	padding-top: 10px; /* Espacio para el botón X */
+}
+
+/* Fila para autor y retraso en la misma línea */
+.voice-author-delay-row {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+
+.voice-author-delay-row > div {
+	flex: 1;
+}
+
+.voice-author-delay-row label {
+	display: block;
+	margin-bottom: 5px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #333;
+}
+
+.voice-author-delay-row select,
+.voice-author-delay-row input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+/* Fila para botones de cambiar y eliminar audio */
+.voice-audio-actions {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-top: 10px;
 }
 
 /* Estilos para carga de audio */
@@ -1381,18 +1416,22 @@ body {
 
 .audio-loaded {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	gap: 10px;
 	padding: 10px;
-	background: white;
-	border: 1px solid #25d366;
-	border-radius: 4px;
 }
 
 .audio-filename {
 	font-weight: 500;
 	color: #333;
+}
+
+.audio-loaded  .audio-controls {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
 .audio-duration {
@@ -1402,29 +1441,31 @@ body {
 
 .change-audio-btn,
 .remove-audio-btn {
-	padding: 4px 8px;
+	padding: 6px 12px;
 	border: none;
-	border-radius: 3px;
+	border-radius: 4px;
 	cursor: pointer;
 	font-size: 12px;
+	font-weight: 500;
+	transition: all 0.2s ease;
 }
 
 .change-audio-btn {
-	background: #007bff;
+	background: #25d366;
 	color: white;
 }
 
 .change-audio-btn:hover {
-	background: #0056b3;
+	background: #1fa851;
 }
 
 .remove-audio-btn {
-	background: #ff4757;
+	background: #ff4444;
 	color: white;
 }
 
 .remove-audio-btn:hover {
-	background: #ff3742;
+	background: #cc0000;
 }
 
 .audio-loading {
@@ -1494,26 +1535,29 @@ body {
 	background: #128c7e;
 }
 
-.preview-waveform {
+.preview-progress-container {
 	flex: 1;
-	height: 24px;
-	background: rgba(0, 0, 0, 0.1);
-	border-radius: 12px;
-	overflow: hidden;
-	position: relative;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	margin: 0 8px;
 }
 
 .preview-progress-bar {
 	width: 100%;
-	height: 100%;
-	background: rgba(255, 255, 255, 0.3);
+	height: 6px;
+	background: rgba(0, 0, 0, 0.1);
+	border-radius: 3px;
+	overflow: hidden;
+	position: relative;
 }
 
 .preview-progress {
 	height: 100%;
 	background: #25d366;
-	border-radius: 12px;
+	border-radius: 3px;
 	transition: width 0.1s ease;
+	width: 0%;
 }
 
 .preview-duration {

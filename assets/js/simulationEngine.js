@@ -39,10 +39,10 @@ class SimulationEngine {
         const message = messages[this.messageIndex];
         const delay = message.delay || 2000;
 
-        // Mostrar indicador de "escribiendo"
-        this.uiController.showTypingIndicator(message.author);
+        // Mostrar indicador de "escribiendo" o "grabando" según el tipo de mensaje
+        this.uiController.showTypingIndicator(message.author, message.type);
 
-        // Simular tiempo de escritura (mínimo 1 segundo, máximo delay/2)
+        // Simular tiempo de escritura/grabación (mínimo 1 segundo, máximo delay/2)
         const typingTime = Math.min(Math.max(1000, delay / 2), 3000);
 
         setTimeout(async () => {

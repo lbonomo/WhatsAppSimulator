@@ -53,20 +53,31 @@ class UIController {
         this.hideTypingIndicator();
     }
 
-    // Mostrar indicador de "escribiendo"
-    showTypingIndicator(authorId) {
-        // Solo mostrar "escribiendo..." si es el participante 2 (el contacto)
+    // Mostrar indicador de "escribiendo" o "grabando"
+    showTypingIndicator(authorId, messageType = 'text') {
+        // Solo mostrar indicador si es el participante 2 (el contacto)
         if (authorId === 2) {
+            const statusElement = document.getElementById('chat-typing-status');
+            
+            // Cambiar el texto según el tipo de mensaje
+            if (messageType === 'voice') {
+                statusElement.textContent = 'grabando...';
+            } else {
+                statusElement.textContent = 'escribiendo...';
+            }
+            
             document.getElementById('chat-status').style.display = 'none';
-            document.getElementById('chat-typing-status').classList.remove('hidden');
+            statusElement.classList.remove('hidden');
         }
         this.scrollToBottom();
     }
 
     // Ocultar indicador de "escribiendo"
     hideTypingIndicator() {
+        const statusElement = document.getElementById('chat-typing-status');
+        statusElement.textContent = 'escribiendo...'; // Restaurar texto por defecto
+        statusElement.classList.add('hidden');
         document.getElementById('chat-status').style.display = 'block';
-        document.getElementById('chat-typing-status').classList.add('hidden');
     }
 
     // Crear elemento de mensaje
@@ -105,7 +116,7 @@ class UIController {
         console.log('Datos del audio:', { hasAudio, audioData: !!message.audioData, duration }); // Debug
         
         // Generar forma de onda aleatoria pero reproducible
-        const waveformData = this.generateWaveform(message.id || 0, 75);
+        const waveformData = this.generateWaveform(message.id || 0, 42);
         const svgWidth = waveformData.totalWidth;
         
         messageDiv.innerHTML = `
@@ -163,7 +174,7 @@ class UIController {
     }
 
     // Generar forma de onda SVG
-    generateWaveform(seed, barCount = 75) {
+    generateWaveform(seed, barCount = 42) {
         let bars = '';
         const maxHeight = 18;
         const minHeight = 3;

@@ -10,7 +10,7 @@ class VoiceMessageManager {
     // Crear interfaz de configuración para mensaje de voz
     createVoiceMessageConfig(message) {
         const messageItem = document.createElement('div');
-        messageItem.className = 'message-item voice-message-config';
+        messageItem.className = 'message-item message-config';
         messageItem.dataset.messageId = message.id;
         
         messageItem.innerHTML = `
@@ -20,14 +20,20 @@ class VoiceMessageManager {
             </div>
             
             <div class="voice-config-content">
-                <div class="form-group">
-                    <label>Autor:</label>
-                    <select class="message-author" data-id="${message.id}">
-                        <option value="1" ${message.author === 1 ? 'selected' : ''}>Local (Derecha)</option>
-                        <option value="2" ${message.author === 2 ? 'selected' : ''}>Contacto (Izquierda)</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Autor:</label>
+                        <select class="message-author" data-id="${message.id}">
+                            <option value="1" ${message.author === 1 ? 'selected' : ''}>Local (Derecha)</option>
+                            <option value="2" ${message.author === 2 ? 'selected' : ''}>Contacto (Izquierda)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Retraso (ms):</label>
+                        <input type="number" class="message-delay" data-id="${message.id}" 
+                            value="${message.delay}" min="0" step="100">
+                    </div>
                 </div>
-                
                 <div class="form-group">
                     <label>Archivo de Audio:</label>
                     <div class="audio-upload-area" data-message-id="${message.id}">
@@ -35,17 +41,23 @@ class VoiceMessageManager {
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label>Retraso (ms):</label>
-                    <input type="number" class="message-delay" data-id="${message.id}" 
-                           value="${message.delay}" min="0" step="100">
-                </div>
                 
                 ${message.audioData ? this.createAudioPreview(message) : ''}
             </div>
         `;
         
         this.setupVoiceConfigEvents(messageItem, message);
+        
+        // Si ya hay audio, configurar el botón de preview
+        if (message.audioData) {
+            setTimeout(() => {
+                const previewPlayBtn = messageItem.querySelector('.preview-play-btn');
+                if (previewPlayBtn) {
+                    this.setupPreviewPlayback(previewPlayBtn);
+                }
+            }, 0);
+        }
+        
         return messageItem;
     }
 
@@ -58,8 +70,10 @@ class VoiceMessageManager {
                         <span class="audio-filename">📎 ${message.audioFileName}</span>
                         <span class="audio-duration">${this.formatDuration(message.duration)}</span>
                     </div>
-                    <button class="change-audio-btn" data-message-id="${message.id}">Cambiar Audio</button>
-                    <button class="remove-audio-btn" data-message-id="${message.id}">Eliminar</button>
+                    <div class="audio-controls">
+                        <button class="change-audio-btn" data-message-id="${message.id}">Cambiar Audio</button>
+                        <button class="remove-audio-btn" data-message-id="${message.id}">Eliminar</button>
+                    </div>
                 </div>
                 <input type="file" class="audio-file-input" 
                        accept="audio/*,.mp3,.wav,.ogg,.m4a,.webm,.mp4" 
@@ -93,7 +107,7 @@ class VoiceMessageManager {
                             <path d="M8 5v14l11-7z"/>
                         </svg>
                     </button>
-                    <div class="preview-waveform">
+                    <div class="preview-progress-container">
                         <div class="preview-progress-bar">
                             <div class="preview-progress" style="width: 0%"></div>
                         </div>
@@ -222,7 +236,10 @@ class VoiceMessageManager {
             }
             
             voiceConfig.insertAdjacentHTML('beforeend', this.createAudioPreview(message));
-            this.setupPreviewPlayback(voiceConfig.querySelector('.preview-play-btn'));
+            
+            // Configurar el botón de preview después de agregarlo al DOM
+            const previewPlayBtn = voiceConfig.querySelector('.preview-play-btn');
+            this.setupPreviewPlayback(previewPlayBtn);
             
             this.uiController.showNotification('✅ Audio cargado correctamente', 'success');
             
@@ -261,45 +278,127 @@ class VoiceMessageManager {
 
     // Configurar reproducción de vista previa
     setupPreviewPlayback(playBtn) {
-        if (!playBtn) return;
+        if (!playBtn) {
+            console.warn('Botón de preview no encontrado');
+            return;
+        }
+        
+        console.log('Configurando botón de preview:', playBtn); // Debug
+        
+        // Remover event listeners anteriores para evitar duplicados
+        const newPlayBtn = playBtn.cloneNode(true);
+        playBtn.parentNode.replaceChild(newPlayBtn, playBtn);
         
         let audio = null;
         let isPlaying = false;
         
-        playBtn.addEventListener('click', () => {
-            const audioData = playBtn.dataset.audioData;
+        // Obtener elementos de la barra de progreso para el preview
+        const previewContainer = newPlayBtn.closest('.voice-message-preview');
+        const progressBar = previewContainer.querySelector('.preview-progress');
+        const durationElement = previewContainer.querySelector('.preview-duration');
+        
+        newPlayBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             
-            if (!audio) {
-                audio = new Audio(audioData);
+            console.log('Click en botón de preview'); // Debug
+            
+            try {
+                const audioData = newPlayBtn.dataset.audioData;
                 
-                audio.addEventListener('ended', () => {
+                if (!audioData) {
+                    console.error('No hay datos de audio para reproducir');
+                    return;
+                }
+                
+                console.log('Datos de audio encontrados, longitud:', audioData.length); // Debug
+                
+                if (!audio) {
+                    audio = new Audio(audioData);
+                    
+                    // Event listeners para manejar la barra de progreso
+                    audio.addEventListener('timeupdate', () => {
+                        if (audio.duration && audio.duration > 0 && progressBar) {
+                            const progress = Math.min(audio.currentTime / audio.duration, 1);
+                            
+                            // Actualizar barra de progreso
+                            progressBar.style.width = `${progress * 100}%`;
+                            
+                            // Actualizar duración restante
+                            if (durationElement) {
+                                const remaining = Math.max(0, audio.duration - audio.currentTime);
+                                durationElement.textContent = this.formatDuration(Math.ceil(remaining));
+                            }
+                        }
+                    });
+                    
+                    audio.addEventListener('ended', () => {
+                        console.log('Audio de preview terminado'); // Debug
+                        isPlaying = false;
+                        newPlayBtn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        `;
+                        
+                        // Resetear barra de progreso
+                        if (progressBar) {
+                            progressBar.style.width = '0%';
+                        }
+                        
+                        // Restaurar duración original
+                        if (durationElement && audio.duration) {
+                            durationElement.textContent = this.formatDuration(Math.round(audio.duration));
+                        }
+                    });
+                    
+                    audio.addEventListener('error', (e) => {
+                        console.error('Error al reproducir audio de preview:', e);
+                        isPlaying = false;
+                        newPlayBtn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        `;
+                    });
+                    
+                    audio.addEventListener('loadstart', () => {
+                        console.log('Audio comenzando a cargar'); // Debug
+                    });
+                    
+                    audio.addEventListener('canplay', () => {
+                        console.log('Audio listo para reproducir'); // Debug
+                    });
+                }
+                
+                if (isPlaying) {
+                    console.log('Pausando audio de preview'); // Debug
+                    audio.pause();
                     isPlaying = false;
-                    playBtn.innerHTML = `
+                    newPlayBtn.innerHTML = `
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
                     `;
-                });
-            }
-            
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                playBtn.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                `;
-            } else {
-                audio.play();
-                isPlaying = true;
-                playBtn.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                `;
+                } else {
+                    console.log('Reproduciendo audio de preview'); // Debug
+                    await audio.play();
+                    isPlaying = true;
+                    newPlayBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                        </svg>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error en la reproducción del preview:', error);
+                if (this.uiController && this.uiController.showNotification) {
+                    this.uiController.showNotification('❌ Error al reproducir audio', 'error');
+                }
             }
         });
+        
+        console.log('Event listener agregado al botón de preview'); // Debug
     }
 
     // Formatear duración
