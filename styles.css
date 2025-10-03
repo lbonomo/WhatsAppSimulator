@@ -20,9 +20,8 @@ body {
 
 /* Marco del Teléfono */
 .phone-frame {
-	max-width: 576px;
+	width: 550px;
 	max-height: 1280px;
-	width: auto;
 	height: calc(100vh - 40px);
 	background: #1a1a1a;
 	border-radius: 35px;
