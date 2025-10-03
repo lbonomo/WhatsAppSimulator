@@ -16,7 +16,8 @@ class MessageManager {
             author: 1,
             type: type, // 'text' o 'voice'
             text: type === 'text' ? '' : null,
-            delay: 2000
+            delay: 2000,
+            replyToId: null // ID del mensaje al que responde (null si no es respuesta)
         };
         
         // Campos específicos para mensajes de voz
@@ -39,6 +40,14 @@ class MessageManager {
         if (message) {
             if (field === 'author') {
                 message[field] = parseInt(value);
+            } else if (field === 'replyToId') {
+                // Manejar replyToId: convertir a número si es un string numérico, null si está vacío
+                if (value === '' || value === null || value === undefined) {
+                    message[field] = null;
+                } else {
+                    message[field] = parseInt(value);
+                }
+                console.log(`Mensaje ${id}: replyToId actualizado a:`, message[field]); // Debug
             } else {
                 message[field] = value;
             }
@@ -63,6 +72,11 @@ class MessageManager {
     // Obtener un mensaje específico
     getMessage(id) {
         return this.messages.find(m => m.id === id);
+    }
+
+    // Obtener mensajes disponibles para responder (excluyendo el mensaje actual)
+    getMessagesForReply(excludeId = null) {
+        return this.messages.filter(m => m.id !== excludeId);
     }
 
     // Manejar archivo de audio para mensaje de voz
@@ -208,6 +222,23 @@ class MessageManager {
     createTextMessageConfig(message, index, participants) {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message-config text-message-config';
+        
+        // Obtener mensajes disponibles para responder
+        const availableMessages = this.getMessagesForReply(message.id);
+        let replyOptions = '<option value="">Sin respuesta</option>';
+        availableMessages.forEach(msg => {
+            const authorName = msg.author === 1 ? 'Local' : 'Contacto';
+            const preview = msg.type === 'voice' ? '🎤 Mensaje de voz' : 
+                           (msg.text ? msg.text.substring(0, 30) + (msg.text.length > 30 ? '...' : '') : 'Mensaje vacío');
+            const selected = message.replyToId === msg.id ? 'selected' : '';
+            replyOptions += `<option value="${msg.id}" ${selected}>#${msg.id} - ${authorName}: ${preview}</option>`;
+        });
+        
+        console.log(`Text message ${message.id} reply options:`, { 
+            replyToId: message.replyToId, 
+            availableMessages: availableMessages.map(m => m.id) 
+        }); // Debug
+        
         messageDiv.innerHTML = `
             <div class="message-header">
                 <span class="message-number">📝 Mensaje #${message.id}</span>
@@ -219,6 +250,13 @@ class MessageManager {
                 <select onchange="simulator.updateMessage(${message.id}, 'author', this.value)">
                     <option value="1" ${message.author === 1 ? 'selected' : ''}>Local (Derecha)</option>
                     <option value="2" ${message.author === 2 ? 'selected' : ''}>Contacto (Izquierda)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Responder a:</label>
+                <select onchange="simulator.updateMessage(${message.id}, 'replyToId', this.value === '' ? null : this.value)">
+                    ${replyOptions}
                 </select>
             </div>
             

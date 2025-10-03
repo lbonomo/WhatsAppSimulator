@@ -39,7 +39,19 @@ class WAFakeSimulator {
     }
 
     updateMessage(id, field, value) {
+        console.log(`Updating message ${id}: ${field} = ${value}`); // Debug
+        
+        // Obtener el valor anterior para comparar
+        const message = this.messageManager.getMessage(id);
+        const oldValue = message ? message[field] : undefined;
+        
         this.messageManager.updateMessage(id, field, value);
+        
+        // Solo re-renderizar si el valor realmente cambió y es replyToId
+        if (field === 'replyToId' && oldValue !== (value === '' ? null : value)) {
+            console.log('Re-rendering configs due to replyToId change'); // Debug
+            this.renderMessageConfigs();
+        }
     }
 
     deleteMessage(id) {

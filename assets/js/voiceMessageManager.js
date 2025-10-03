@@ -13,6 +13,22 @@ class VoiceMessageManager {
         messageItem.className = 'message-item message-config';
         messageItem.dataset.messageId = message.id;
         
+        // Obtener mensajes disponibles para responder
+        const availableMessages = this.messageManager.getMessagesForReply(message.id);
+        let replyOptions = '<option value="">Sin respuesta</option>';
+        availableMessages.forEach(msg => {
+            const authorName = msg.author === 1 ? 'Local' : 'Contacto';
+            const preview = msg.type === 'voice' ? '🎤 Mensaje de voz' : 
+                           (msg.text ? msg.text.substring(0, 30) + (msg.text.length > 30 ? '...' : '') : 'Mensaje vacío');
+            const selected = message.replyToId === msg.id ? 'selected' : '';
+            replyOptions += `<option value="${msg.id}" ${selected}>#${msg.id} - ${authorName}: ${preview}</option>`;
+        });
+        
+        console.log(`Voice message ${message.id} reply options:`, { 
+            replyToId: message.replyToId, 
+            availableMessages: availableMessages.map(m => m.id) 
+        }); // Debug
+        
         messageItem.innerHTML = `
             <div class="message-header">
                 <span class="message-label">🎤 Mensaje de Voz #${message.id}</span>
@@ -34,6 +50,14 @@ class VoiceMessageManager {
                             value="${message.delay}" min="0" step="100">
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label>Responder a:</label>
+                    <select class="message-reply" data-id="${message.id}">
+                        ${replyOptions}
+                    </select>
+                </div>
+                
                 <div class="form-group">
                     <label>Archivo de Audio:</label>
                     <div class="audio-upload-area" data-message-id="${message.id}">
@@ -133,6 +157,16 @@ class VoiceMessageManager {
         delayInput.addEventListener('input', (e) => {
             this.messageManager.updateMessage(messageId, 'delay', parseInt(e.target.value));
         });
+        
+        // Cambio de respuesta
+        const replySelect = messageItem.querySelector('.message-reply');
+        if (replySelect) {
+            replySelect.addEventListener('change', (e) => {
+                const replyToId = e.target.value === '' ? null : e.target.value;
+                this.messageManager.updateMessage(messageId, 'replyToId', replyToId);
+                console.log(`Voice message ${messageId}: replyToId changed to:`, replyToId); // Debug
+            });
+        }
         
         // Eventos de carga de audio
         this.setupAudioUploadEvents(messageItem, messageId);
